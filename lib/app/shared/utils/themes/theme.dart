@@ -24,7 +24,7 @@ ThemeData lightThemeData(BuildContext context) {
         color: kblue,
       ),
     ),
-    iconTheme: const IconThemeData(color: kblue),
+    iconTheme: IconThemeData(color: klightGrey),
     textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)
         .apply(bodyColor: kContentColorLightTheme),
     colorScheme: const ColorScheme.light(
@@ -33,8 +33,9 @@ ThemeData lightThemeData(BuildContext context) {
       error: kErrorColor,
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: Colors.white,
-      selectedItemColor: kContentColorLightTheme.withOpacity(0.7),
+      backgroundColor: kLight,
+      elevation: 24,
+      selectedItemColor: kPrimaryColor,
       unselectedItemColor: kContentColorLightTheme.withOpacity(0.32),
       selectedIconTheme: const IconThemeData(color: kPrimaryColor),
       showUnselectedLabels: true,

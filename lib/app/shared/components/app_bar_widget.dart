@@ -1,40 +1,39 @@
 import 'package:flutter/material.dart';
-
-import 'package:veacos/app/shared/auth/model/user_dio_client.model.dart';
-import 'package:veacos/app/shared/auth/repositories/auth_repository.dart';
-import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
-import 'package:veacos/app/shared/repositories/localstorage/local_storage_share.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:veacos/app/shared/utils/themes/theme.dart';
 
 class AppBarWidget extends StatefulWidget with PreferredSizeWidget {
-  final double size;
+  final bool drawer;
+  final bool theme;
+  const AppBarWidget({Key? key, this.drawer = false, this.theme = false})
+      : super(key: key);
 
-  AppBarWidget({
-    Key? key,
-    this.size = 55,
-  }) : super(key: key);
+  @override
+  Size get preferredSize => const Size.fromHeight(56);
 
   @override
   State<AppBarWidget> createState() => _AppBarWidgetState();
-
-  @override
-  Size get preferredSize => Size.fromHeight(size);
 }
 
 class _AppBarWidgetState extends State<AppBarWidget> {
-  bool search = false;
-  AuthRepository auth = AuthRepository();
-  ILocalStorage storage = LocalStorageShare();
-  UserDioClientModel user = UserDioClientModel();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraint) {
-      return AppBar();
-    });
+    return AppBar(
+      leading: Builder(
+        builder: (context) => IconButton(
+          icon: Icon(
+            widget.drawer ? Icons.menu_rounded : Icons.arrow_back,
+            color: widget.theme
+                ? darkThemeData(context).scaffoldBackgroundColor
+                : lightThemeData(context).scaffoldBackgroundColor,
+          ),
+          onPressed: () => widget.drawer
+              ? Scaffold.of(context).openDrawer()
+              : Modular.to.navigate('/home/'),
+        ),
+      ),
+      backgroundColor: lightThemeData(context).primaryColor,
+      title: Image.asset('assets/img/logo.png'),
+    );
   }
 }

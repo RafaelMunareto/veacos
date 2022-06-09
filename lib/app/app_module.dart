@@ -16,6 +16,6 @@ class AppModule extends Module {
   final List<ModularRoute> routes = [
     ChildRoute("/", child: (_, args) => const SplashWidget()),
     ModuleRoute('/home',
-        module: HomeModule(), transition: TransitionType.leftToRightWithFade),
+        module: HomeModule(), transition: TransitionType.rightToLeftWithFade),
   ];
 }

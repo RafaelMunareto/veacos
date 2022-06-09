@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:veacos/app/shared/utils/error_pt_br.dart';
 
 class SnackbarCustom {
   createSnackBar(message, cor, context) {
@@ -28,12 +27,5 @@ class SnackbarCustom {
         scaffoldKey.currentState.showSnackBar(snackbar);
       }
     }
-  }
-
-  createSnackBarErrorFirebase(message, cor, context) {
-    final snackBar = SnackBar(
-        content: Text(ErrorPtBr().verificaCodeErro(message)),
-        backgroundColor: cor);
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

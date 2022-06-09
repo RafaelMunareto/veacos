@@ -35,7 +35,6 @@ dependencies:
   google_sign_in: ^5.3.0
   flutter_zoom_drawer: ^2.1.2
   flutter_iconpicker: ^3.1.4+1
-  bubble_bottom_bar: ^2.0.0
   boardview: ^0.2.2
   intl: ^0.17.0
   date_format: ^2.0.5
@@ -58,6 +57,7 @@ dependencies:
   image_cropper: ^2.0.3
   image_cropper_view: ^0.0.2
 
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,7 +75,7 @@ flutter_icons:
   adaptive_icon_background: '#ffffff'
 
 flutter_native_splash:
-  color: '#f7f6f4'
+  color: '#F0FEFD'
   image: 'assets/icon/icon.png'
 
 flutter:

@@ -25,6 +25,22 @@ mixin _$ClientStore on _ClientStoreBase, Store {
     });
   }
 
+  late final _$themeAtom =
+      Atom(name: '_ClientStoreBase.theme', context: context);
+
+  @override
+  bool get theme {
+    _$themeAtom.reportRead();
+    return super.theme;
+  }
+
+  @override
+  set theme(bool value) {
+    _$themeAtom.reportWrite(value, super.theme, () {
+      super.theme = value;
+    });
+  }
+
   late final _$_ClientStoreBaseActionController =
       ActionController(name: '_ClientStoreBase', context: context);
 
@@ -40,9 +56,21 @@ mixin _$ClientStore on _ClientStoreBase, Store {
   }
 
   @override
+  dynamic setTheme(dynamic value) {
+    final _$actionInfo = _$_ClientStoreBaseActionController.startAction(
+        name: '_ClientStoreBase.setTheme');
+    try {
+      return super.setTheme(value);
+    } finally {
+      _$_ClientStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-bottomNavigateIndex: ${bottomNavigateIndex}
+bottomNavigateIndex: ${bottomNavigateIndex},
+theme: ${theme}
     ''';
   }
 }

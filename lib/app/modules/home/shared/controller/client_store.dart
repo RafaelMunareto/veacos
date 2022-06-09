@@ -10,4 +10,10 @@ abstract class _ClientStoreBase with Store {
 
   @action
   setBottomNavigateIndex(value) => bottomNavigateIndex = value;
+
+  @observable
+  bool theme = false;
+
+  @action
+  setTheme(value) => theme = value;
 }

@@ -17,6 +17,7 @@ ThemeData lightThemeData(BuildContext context) {
       backgroundColor: kPrimaryColor,
       elevation: kElevation,
     ),
+    cardColor: kPrimaryColor,
     appBarTheme: AppBarTheme(
       backgroundColor: kWhite,
       foregroundColor: kDarkGrey,

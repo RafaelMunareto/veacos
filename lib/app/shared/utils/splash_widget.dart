@@ -45,7 +45,7 @@ class _SplashWidgetState extends State<SplashWidget>
     _controller =
         AnimationController(duration: const Duration(seconds: 1), vsync: this);
     _controller.forward();
-    Timer(const Duration(seconds: 1), () => Modular.to.navigate('/home/'));
+    Timer(const Duration(seconds: 1), () => Modular.to.navigate('/auth/'));
     super.initState();
   }
 

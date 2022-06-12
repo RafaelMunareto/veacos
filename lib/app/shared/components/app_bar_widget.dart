@@ -33,7 +33,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         ),
       ),
       backgroundColor: lightThemeData(context).primaryColor,
-      title: Image.asset('assets/img/logo.png'),
+      title: Image.asset('assets/img/logo_branco.png'),
     );
   }
 }

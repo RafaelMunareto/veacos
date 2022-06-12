@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:veacos/app/modules/auth/auth_module.dart';
 import 'package:veacos/app/modules/home/home_module.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_share.dart';
@@ -14,8 +15,10 @@ class AppModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute("/", child: (_, args) => const SplashWidget()),
+    ChildRoute(Modular.initialRoute, child: (_, args) => const SplashWidget()),
     ModuleRoute('/home',
         module: HomeModule(), transition: TransitionType.rightToLeftWithFade),
+    ModuleRoute('/auth',
+        module: AuthModule(), transition: TransitionType.rightToLeftWithFade),
   ];
 }

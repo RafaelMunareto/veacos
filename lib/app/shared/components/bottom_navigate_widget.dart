@@ -57,10 +57,6 @@ class _BottomNavigateWidgetState extends State<BottomNavigateWidget> {
               icon: Icon(Icons.receipt),
               label: 'Meus Calotes',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_circle_outline_sharp),
-              label: 'Nova conta',
-            ),
           ],
           currentIndex: store.client.bottomNavigateIndex,
           onTap: (value) => _onItemTapped(value),

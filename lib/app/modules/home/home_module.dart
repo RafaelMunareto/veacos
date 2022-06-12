@@ -1,5 +1,4 @@
 import 'package:veacos/app/modules/home/shared/controller/client_store.dart';
-import 'package:veacos/app/modules/home/create/create_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:veacos/app/modules/home/meus_calotes/meusCalotes_module.dart';
 import '../home/home_store.dart';
@@ -19,7 +18,5 @@ class HomeModule extends Module {
     ModuleRoute('/meus_calotes/',
         module: MeusCalotesModule(),
         transition: TransitionType.leftToRightWithFade),
-    ModuleRoute('/create/',
-        module: CreateModule(), transition: TransitionType.leftToRightWithFade),
   ];
 }

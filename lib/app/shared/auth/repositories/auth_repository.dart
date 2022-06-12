@@ -26,7 +26,7 @@ class AuthRepository implements IAuthRepository {
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser!.authentication;
-    UserDioClientModel user = UserDioClientModel(
+    UserClientModel user = UserClientModel(
       name: googleUser.displayName,
       email: googleUser.email,
       password: '',
@@ -42,12 +42,12 @@ class AuthRepository implements IAuthRepository {
     response = await dio.get('usuarios/email/${googleUser.email}');
     DioStruture().statusRequest(response);
     if (response.data != null) {
-      UserDioClientModel? userGet = UserDioClientModel.fromJson(response.data);
+      UserClientModel? userGet = UserClientModel.fromJson(response.data);
       return userGet;
     } else {
       saveUser(user).then((e) async {
         if (e.data != null) {
-          UserDioClientModel userGet = UserDioClientModel.fromJson(e.data);
+          UserClientModel userGet = UserClientModel.fromJson(e.data);
           perfilUser(userGet);
           return userGet;
         }
@@ -59,7 +59,7 @@ class AuthRepository implements IAuthRepository {
   getLogout() async {
     await SessionManager().remove('token');
     await storage.put('token', []);
-    await storage.put('userDio', []);
+    await storage.put('user', []);
     await storage.put('login-normal', []);
     Modular.to.navigate('/auth/');
   }
@@ -74,7 +74,7 @@ class AuthRepository implements IAuthRepository {
       ),
     );
 
-    response = await dio.post('sessions',
+    response = await dio.post('users/signin',
         data: jsonEncode({"email": email, "password": password}));
     DioStruture().statusRequest(response);
 
@@ -100,15 +100,15 @@ class AuthRepository implements IAuthRepository {
 
   @override
   getUser() async {
-    return await storage.get('userDio').then((value) {
+    return await storage.get('user').then((value) {
       if (value != null) {
-        return UserDioClientModel.fromJson(jsonDecode(value[0]));
+        return UserClientModel.fromJson(jsonDecode(value[0]));
       }
     });
   }
 
   @override
-  saveUser(UserDioClientModel model) async {
+  saveUser(UserClientModel model) async {
     model.email = model.email.toLowerCase();
     Response response;
     var dio = Dio(
@@ -117,7 +117,7 @@ class AuthRepository implements IAuthRepository {
       ),
     );
 
-    response = await dio.post('usuarios', data: model.toJson());
+    response = await dio.post('/users/signup', data: model.toJson());
     DioStruture().statusRequest(response);
     return response;
   }
@@ -138,7 +138,7 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  Future perfilUser(UserDioClientModel user) {
+  Future perfilUser(UserClientModel user) {
     throw UnimplementedError();
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:veacos/app/modules/auth/shared/client_auth_store.dart';
 import 'package:veacos/app/modules/auth/signup/signup_page.dart';
 import 'package:veacos/app/modules/auth/signup/signup_store.dart';
 

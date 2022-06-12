@@ -29,13 +29,13 @@ mixin _$AuthController on _AuthControllerBase, Store {
       Atom(name: '_AuthControllerBase.user', context: context);
 
   @override
-  UserDioClientModel? get user {
+  UserClientModel? get user {
     _$userAtom.reportRead();
     return super.user;
   }
 
   @override
-  set user(UserDioClientModel? value) {
+  set user(UserClientModel? value) {
     _$userAtom.reportWrite(value, super.user, () {
       super.user = value;
     });
@@ -45,7 +45,7 @@ mixin _$AuthController on _AuthControllerBase, Store {
       ActionController(name: '_AuthControllerBase', context: context);
 
   @override
-  dynamic setUser(UserDioClientModel value) {
+  dynamic setUser(UserClientModel value) {
     final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
         name: '_AuthControllerBase.setUser');
     try {
@@ -133,7 +133,7 @@ mixin _$AuthController on _AuthControllerBase, Store {
   }
 
   @override
-  dynamic saveUser(UserDioClientModel model) {
+  dynamic saveUser(UserClientModel model) {
     final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
         name: '_AuthControllerBase.saveUser');
     try {
@@ -144,7 +144,7 @@ mixin _$AuthController on _AuthControllerBase, Store {
   }
 
   @override
-  Future<dynamic> perfilUser(UserDioClientModel user) {
+  Future<dynamic> perfilUser(UserClientModel user) {
     final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
         name: '_AuthControllerBase.perfilUser');
     try {

@@ -9,19 +9,66 @@ part of 'forget_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ForgetStore on _ForgetStoreBase, Store {
-  late final _$valueAtom =
-      Atom(name: '_ForgetStoreBase.value', context: context);
+  late final _$checkErrorAtom =
+      Atom(name: '_ForgetStoreBase.checkError', context: context);
 
   @override
-  int get value {
-    _$valueAtom.reportRead();
-    return super.value;
+  bool get checkError {
+    _$checkErrorAtom.reportRead();
+    return super.checkError;
   }
 
   @override
-  set value(int value) {
-    _$valueAtom.reportWrite(value, super.value, () {
-      super.value = value;
+  set checkError(bool value) {
+    _$checkErrorAtom.reportWrite(value, super.checkError, () {
+      super.checkError = value;
+    });
+  }
+
+  late final _$msgAtom = Atom(name: '_ForgetStoreBase.msg', context: context);
+
+  @override
+  String get msg {
+    _$msgAtom.reportRead();
+    return super.msg;
+  }
+
+  @override
+  set msg(String value) {
+    _$msgAtom.reportWrite(value, super.msg, () {
+      super.msg = value;
+    });
+  }
+
+  late final _$msgErrOrGoalAtom =
+      Atom(name: '_ForgetStoreBase.msgErrOrGoal', context: context);
+
+  @override
+  bool get msgErrOrGoal {
+    _$msgErrOrGoalAtom.reportRead();
+    return super.msgErrOrGoal;
+  }
+
+  @override
+  set msgErrOrGoal(bool value) {
+    _$msgErrOrGoalAtom.reportWrite(value, super.msgErrOrGoal, () {
+      super.msgErrOrGoal = value;
+    });
+  }
+
+  late final _$themeAtom =
+      Atom(name: '_ForgetStoreBase.theme', context: context);
+
+  @override
+  bool get theme {
+    _$themeAtom.reportRead();
+    return super.theme;
+  }
+
+  @override
+  set theme(bool value) {
+    _$themeAtom.reportWrite(value, super.theme, () {
+      super.theme = value;
     });
   }
 
@@ -29,11 +76,44 @@ mixin _$ForgetStore on _ForgetStoreBase, Store {
       ActionController(name: '_ForgetStoreBase', context: context);
 
   @override
-  void increment() {
+  dynamic setMsg(dynamic value) {
     final _$actionInfo = _$_ForgetStoreBaseActionController.startAction(
-        name: '_ForgetStoreBase.increment');
+        name: '_ForgetStoreBase.setMsg');
     try {
-      return super.increment();
+      return super.setMsg(value);
+    } finally {
+      _$_ForgetStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setMsgErrOrGoal(dynamic value) {
+    final _$actionInfo = _$_ForgetStoreBaseActionController.startAction(
+        name: '_ForgetStoreBase.setMsgErrOrGoal');
+    try {
+      return super.setMsgErrOrGoal(value);
+    } finally {
+      _$_ForgetStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setTheme(dynamic value) {
+    final _$actionInfo = _$_ForgetStoreBaseActionController.startAction(
+        name: '_ForgetStoreBase.setTheme');
+    try {
+      return super.setTheme(value);
+    } finally {
+      _$_ForgetStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic submit() {
+    final _$actionInfo = _$_ForgetStoreBaseActionController.startAction(
+        name: '_ForgetStoreBase.submit');
+    try {
+      return super.submit();
     } finally {
       _$_ForgetStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -42,7 +122,10 @@ mixin _$ForgetStore on _ForgetStoreBase, Store {
   @override
   String toString() {
     return '''
-value: ${value}
+checkError: ${checkError},
+msg: ${msg},
+msgErrOrGoal: ${msgErrOrGoal},
+theme: ${theme}
     ''';
   }
 }

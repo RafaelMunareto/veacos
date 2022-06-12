@@ -6,7 +6,7 @@ import 'package:veacos/app/shared/repositories/localstorage/local_storage_share.
 class DioStruture {
   final ILocalStorage storage = LocalStorageShare();
   final baseUrlMunatasks =
-      'http://localhost:3333/'; //web desktop local 'http://localhost:3333/ app 'http://10.0.2.2:3333/' prod 'http://api.munatask.com/''
+      'http://10.0.2.2:3333/'; //web desktop local 'http://localhost:3333/ app 'http://10.0.2.2:3333/' prod 'http://api.munatask.com/''
   List<String> localStorage = [];
   String token = '';
   dioAction() async {

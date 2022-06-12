@@ -16,6 +16,13 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
       (_$isValidLoginComputed ??= Computed<bool>(() => super.isValidLogin,
               name: '_ClientAuthStoreBase.isValidLogin'))
           .value;
+  Computed<bool>? _$isValidSignupComputed;
+
+  @override
+  bool get isValidSignup =>
+      (_$isValidSignupComputed ??= Computed<bool>(() => super.isValidSignup,
+              name: '_ClientAuthStoreBase.isValidSignup'))
+          .value;
   Computed<bool>? _$isValidChangePasswordComputed;
 
   @override
@@ -30,6 +37,38 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
       (_$isValidEmailComputed ??= Computed<bool>(() => super.isValidEmail,
               name: '_ClientAuthStoreBase.isValidEmail'))
           .value;
+
+  late final _$loadingAtom =
+      Atom(name: '_ClientAuthStoreBase.loading', context: context);
+
+  @override
+  bool get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
+  late final _$themeAtom =
+      Atom(name: '_ClientAuthStoreBase.theme', context: context);
+
+  @override
+  bool get theme {
+    _$themeAtom.reportRead();
+    return super.theme;
+  }
+
+  @override
+  set theme(bool value) {
+    _$themeAtom.reportWrite(value, super.theme, () {
+      super.theme = value;
+    });
+  }
 
   late final _$nameAtom =
       Atom(name: '_ClientAuthStoreBase.name', context: context);
@@ -99,6 +138,28 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
       ActionController(name: '_ClientAuthStoreBase', context: context);
 
   @override
+  dynamic setLoading(dynamic value) {
+    final _$actionInfo = _$_ClientAuthStoreBaseActionController.startAction(
+        name: '_ClientAuthStoreBase.setLoading');
+    try {
+      return super.setLoading(value);
+    } finally {
+      _$_ClientAuthStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setTheme(dynamic value) {
+    final _$actionInfo = _$_ClientAuthStoreBaseActionController.startAction(
+        name: '_ClientAuthStoreBase.setTheme');
+    try {
+      return super.setTheme(value);
+    } finally {
+      _$_ClientAuthStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic setName(dynamic value) {
     final _$actionInfo = _$_ClientAuthStoreBaseActionController.startAction(
         name: '_ClientAuthStoreBase.setName');
@@ -156,11 +217,14 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
   @override
   String toString() {
     return '''
+loading: ${loading},
+theme: ${theme},
 name: ${name},
 email: ${email},
 password: ${password},
 confirmPassword: ${confirmPassword},
 isValidLogin: ${isValidLogin},
+isValidSignup: ${isValidSignup},
 isValidChangePassword: ${isValidChangePassword},
 isValidEmail: ${isValidEmail}
     ''';

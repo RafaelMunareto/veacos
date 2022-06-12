@@ -6,7 +6,6 @@ import 'package:veacos/app/modules/home/home_store.dart';
 import 'package:veacos/app/shared/components/app_bar_widget.dart';
 import 'package:veacos/app/shared/components/bottom_navigate_widget.dart';
 import 'package:veacos/app/shared/components/drawer_widget.dart';
-import 'package:veacos/app/shared/utils/themes/theme.dart';
 
 class Divida {
   const Divida(this.divida, this.valor);

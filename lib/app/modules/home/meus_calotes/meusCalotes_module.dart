@@ -1,6 +1,8 @@
+// ignore_for_file: file_names
+
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:veacos/app/modules/home/meus_calotes/meus_calotes_page.dart';
 import 'package:veacos/app/modules/home/meus_calotes/meus_calotes_store.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class MeusCalotesModule extends Module {
   @override

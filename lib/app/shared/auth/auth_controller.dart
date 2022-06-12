@@ -20,19 +20,19 @@ abstract class _AuthControllerBase with Store {
   AuthStatus status = AuthStatus.loading;
 
   @observable
-  UserDioClientModel? user;
+  UserClientModel? user;
 
   _AuthControllerBase(
       {required this.authRepository, required this.biometricRepository});
 
   @action
-  setUser(UserDioClientModel value) {
-    storage.get('userDio').then((value) {
+  setUser(UserClientModel value) {
+    storage.get('user').then((value) {
       if (value != null) {
-        user = UserDioClientModel.fromJson(jsonDecode(value[0])['user']);
+        user = UserClientModel.fromJson(jsonDecode(value[0])['user']);
       }
     });
-    status = user!.id == null ? AuthStatus.logoff : AuthStatus.login;
+    status = user!.email == '' ? AuthStatus.logoff : AuthStatus.login;
   }
 
   @action
@@ -72,12 +72,12 @@ abstract class _AuthControllerBase with Store {
   }
 
   @action
-  saveUser(UserDioClientModel model) {
+  saveUser(UserClientModel model) {
     return authRepository.saveUser(model);
   }
 
   @action
-  Future perfilUser(UserDioClientModel user) {
+  Future perfilUser(UserClientModel user) {
     return authRepository.perfilUser(user);
   }
 

@@ -6,25 +6,37 @@ class ClientAuthStore = _ClientAuthStoreBase with _$ClientAuthStore;
 
 abstract class _ClientAuthStoreBase with Store {
   @observable
+  bool loading = false;
+
+  @action
+  setLoading(value) => loading = value;
+
+  @observable
+  bool theme = false;
+
+  @action
+  setTheme(value) => theme = value;
+
+  @observable
   String name = '';
-
-  @observable
-  String email = '';
-
-  @observable
-  String password = '';
-
-  @observable
-  String confirmPassword = '';
 
   @action
   setName(value) => name = value;
 
+  @observable
+  String email = '';
+
   @action
   setEmail(value) => email = value;
 
+  @observable
+  String password = '';
+
   @action
   setPassword(value) => password = value;
+
+  @observable
+  String confirmPassword = '';
 
   @action
   setConfirmPassword(value) => confirmPassword = value;
@@ -39,6 +51,14 @@ abstract class _ClientAuthStoreBase with Store {
   @computed
   bool get isValidLogin {
     return validateEmail() == null && validatePassword() == null;
+  }
+
+  @computed
+  bool get isValidSignup {
+    return validateEmail() == null &&
+        validatePassword() == null &&
+        validateConfirmPassword() == null &&
+        validateName() == null;
   }
 
   @computed

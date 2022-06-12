@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:veacos/app/modules/home/home_store.dart';
 import 'package:veacos/app/shared/utils/themes/theme.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -11,6 +13,7 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
+  HomeStore store = Modular.get();
   String name = '';
   String? photo;
 
@@ -73,9 +76,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               color: Colors.blueGrey,
             ),
           ),
-          const ListTile(
-            leading: Icon(Icons.logout),
-            trailing: Text('Sair'),
+          ListTile(
+            onTap: () => store.logout(),
+            leading: const Icon(Icons.logout),
+            trailing: const Text('Sair'),
           ),
         ],
       ),

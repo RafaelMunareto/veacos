@@ -1,37 +1,32 @@
-class UserDioClientModel {
-  dynamic id;
+class UserClientModel {
   dynamic name;
   dynamic email;
   dynamic password;
 
-  UserDioClientModel({
-    this.id,
+  UserClientModel({
     this.name,
     this.email,
     this.password,
   });
 
-  factory UserDioClientModel.fromDocument(doc) {
-    return UserDioClientModel(
-      id: doc['id'],
+  factory UserClientModel.fromDocument(doc) {
+    return UserClientModel(
       name: doc['name'],
       email: doc['email'],
       password: doc['password'],
     );
   }
 
-  factory UserDioClientModel.fromMap(Map<String, dynamic> map) {
-    return UserDioClientModel(
-      id: map["_id"],
+  factory UserClientModel.fromMap(Map<String, dynamic> map) {
+    return UserClientModel(
       name: map["name"],
       email: map["email"],
       password: map["password"],
     );
   }
 
-  factory UserDioClientModel.fromJson(Map<String, dynamic> json) {
-    return UserDioClientModel(
-      id: json['id'],
+  factory UserClientModel.fromJson(Map<String, dynamic> json) {
+    return UserClientModel(
       name: json['name'],
       email: json['email'],
       password: json["password"],
@@ -39,7 +34,6 @@ class UserDioClientModel {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
         "name": name,
         "email": email,
         "password": password,

@@ -25,16 +25,16 @@ class SignupPageState extends State<SignupPage> {
     super.didChangeDependencies();
     autorun(
       (_) {
-        if (store.msg != '') {
+        if (store.client.msg != '') {
           SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
-              errOrGoal: store.msgErrOrGoal,
-              message: store.msg,
+              errOrGoal: store.client.msgErrOrGoal,
+              message: store.client.msg,
               rota: '/auth/');
-          if (store.msgErrOrGoal) {
+          if (store.client.msgErrOrGoal) {
             Timer(const Duration(seconds: 2),
                 () => store.client.cleanVariables());
           }
-          store.setMsg('');
+          store.client.setMsg('');
         }
       },
     );

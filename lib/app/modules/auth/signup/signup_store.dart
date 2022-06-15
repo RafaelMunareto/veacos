@@ -32,18 +32,6 @@ abstract class _SignupStoreBase with Store {
     });
   }
 
-  @observable
-  String msg = '';
-
-  @observable
-  bool msgErrOrGoal = false;
-
-  @action
-  setMsgErrOrGoal(value) => msgErrOrGoal = value;
-
-  @action
-  setMsg(value) => msg = value;
-
   @computed
   bool get isValidRegisterEmailGrupo {
     return client.validateName() == null &&
@@ -57,8 +45,8 @@ abstract class _SignupStoreBase with Store {
         email: client.email, name: client.name, password: client.password);
     client.setLoading(true);
     auth.saveUser(model).then((value) {
-      setMsgErrOrGoal(true);
-      setMsg('Usuário criado com sucesso');
+      client.setMsgErrOrGoal(true);
+      client.setMsg('Usuário criado com sucesso');
       client.setLoading(false);
 
       auth.getLoginDio(client.email, client.password).then((value) async {
@@ -70,8 +58,8 @@ abstract class _SignupStoreBase with Store {
         Modular.to.navigate('/auth/');
       });
     }).catchError((error) {
-      setMsgErrOrGoal(false);
-      setMsg(error.response?.data['error'] ?? error?.message);
+      client.setMsgErrOrGoal(false);
+      client.setMsg(error?.message);
       client.setLoading(false);
     });
   }

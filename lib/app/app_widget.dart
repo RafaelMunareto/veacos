@@ -1,7 +1,11 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_share.dart';
 import 'package:veacos/app/shared/utils/themes/theme.dart';
@@ -22,11 +26,31 @@ class _AppWidgetState extends State<AppWidget> {
   late String darkLight = '';
   bool isDark = false;
 
+  StreamSubscription? _sub;
+
+  void _handleIncomingLinks() {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      _sub = uriLinkStream.listen((Uri? uri) {
+        if (!mounted) return;
+        Modular.to
+            .navigate('/auth/change/?code=${uri.toString().split('code=')[1]}');
+      }, onError: (Object err) {
+        if (!mounted) return;
+      });
+    }
+  }
+
   @override
   void initState() {
-    // DioStruture().dioGetToken();
+    _handleIncomingLinks();
     buscaStorage();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
   }
 
   buscaStorage() async {

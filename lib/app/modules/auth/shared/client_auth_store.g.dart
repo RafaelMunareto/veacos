@@ -134,6 +134,54 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
     });
   }
 
+  late final _$checkErrorAtom =
+      Atom(name: '_ClientAuthStoreBase.checkError', context: context);
+
+  @override
+  bool get checkError {
+    _$checkErrorAtom.reportRead();
+    return super.checkError;
+  }
+
+  @override
+  set checkError(bool value) {
+    _$checkErrorAtom.reportWrite(value, super.checkError, () {
+      super.checkError = value;
+    });
+  }
+
+  late final _$msgAtom =
+      Atom(name: '_ClientAuthStoreBase.msg', context: context);
+
+  @override
+  String get msg {
+    _$msgAtom.reportRead();
+    return super.msg;
+  }
+
+  @override
+  set msg(String value) {
+    _$msgAtom.reportWrite(value, super.msg, () {
+      super.msg = value;
+    });
+  }
+
+  late final _$msgErrOrGoalAtom =
+      Atom(name: '_ClientAuthStoreBase.msgErrOrGoal', context: context);
+
+  @override
+  bool get msgErrOrGoal {
+    _$msgErrOrGoalAtom.reportRead();
+    return super.msgErrOrGoal;
+  }
+
+  @override
+  set msgErrOrGoal(bool value) {
+    _$msgErrOrGoalAtom.reportWrite(value, super.msgErrOrGoal, () {
+      super.msgErrOrGoal = value;
+    });
+  }
+
   late final _$_ClientAuthStoreBaseActionController =
       ActionController(name: '_ClientAuthStoreBase', context: context);
 
@@ -215,6 +263,28 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
   }
 
   @override
+  dynamic setMsg(dynamic value) {
+    final _$actionInfo = _$_ClientAuthStoreBaseActionController.startAction(
+        name: '_ClientAuthStoreBase.setMsg');
+    try {
+      return super.setMsg(value);
+    } finally {
+      _$_ClientAuthStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setMsgErrOrGoal(dynamic value) {
+    final _$actionInfo = _$_ClientAuthStoreBaseActionController.startAction(
+        name: '_ClientAuthStoreBase.setMsgErrOrGoal');
+    try {
+      return super.setMsgErrOrGoal(value);
+    } finally {
+      _$_ClientAuthStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 loading: ${loading},
@@ -223,6 +293,9 @@ name: ${name},
 email: ${email},
 password: ${password},
 confirmPassword: ${confirmPassword},
+checkError: ${checkError},
+msg: ${msg},
+msgErrOrGoal: ${msgErrOrGoal},
 isValidLogin: ${isValidLogin},
 isValidSignup: ${isValidSignup},
 isValidChangePassword: ${isValidChangePassword},

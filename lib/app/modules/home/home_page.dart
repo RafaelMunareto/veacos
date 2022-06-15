@@ -40,7 +40,9 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: const BorderRadius.only(
                           bottomRight: Radius.circular(40.0),
                           bottomLeft: Radius.circular(40.0)),
-                      color: lightThemeData(context).primaryColor,
+                      color: store.client.theme
+                          ? darkThemeData(context).primaryColor
+                          : lightThemeData(context).primaryColor,
                     ),
                     child: Column(
                       children: [
@@ -181,10 +183,9 @@ class _HomePageState extends State<HomePage> {
                                           TextEditingController(text: "100.00"),
                                     ),
                                   ),
-                                  Expanded(
+                                  const Expanded(
                                       child: Icon(
                                     Icons.receipt_long,
-                                    color: lightThemeData(context).primaryColor,
                                   ))
                                 ],
                               ),

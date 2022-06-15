@@ -25,16 +25,16 @@ class LoginPageState extends State<LoginPage> {
     super.didChangeDependencies();
     autorun(
       (_) {
-        if (store.msg != '') {
+        if (store.client.msg != '') {
           SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
-              message: store.msg, errOrGoal: store.errOrGoal);
-          if (store.errOrGoal) {
+              message: store.client.msg, errOrGoal: store.client.msgErrOrGoal);
+          if (store.client.msgErrOrGoal) {
             Timer(
               const Duration(seconds: 2),
               () => store.client.cleanVariables(),
             );
           }
-          store.setMsg('');
+          store.client.setMsg('');
         }
       },
     );

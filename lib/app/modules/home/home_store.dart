@@ -13,11 +13,30 @@ abstract class HomeStoreBase with Store {
   ClientStore client = Modular.get();
   final ILocalStorage storage = Modular.get();
 
+  HomeStoreBase() {
+    buscaTheme();
+  }
+
   logout() async {
     await storage.delete('login-normal');
     await storage.delete('user');
     await storage.delete('token');
     await SessionManager().remove('token');
     await Modular.get<AuthController>().logout();
+  }
+
+  changeSwitch(value) {
+    value = value ? ['dark'] : ['light'];
+    storage.put('theme', value);
+  }
+
+  buscaTheme() {
+    storage.get('theme').then((value) {
+      if (value?[0] == 'dark') {
+        client.setTheme(true);
+      } else {
+        client.setTheme(false);
+      }
+    });
   }
 }

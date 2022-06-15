@@ -25,21 +25,6 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     });
   }
 
-  late final _$msgAtom = Atom(name: '_LoginStoreBase.msg', context: context);
-
-  @override
-  String get msg {
-    _$msgAtom.reportRead();
-    return super.msg;
-  }
-
-  @override
-  set msg(String value) {
-    _$msgAtom.reportWrite(value, super.msg, () {
-      super.msg = value;
-    });
-  }
-
   late final _$faceOrFingerAtom =
       Atom(name: '_LoginStoreBase.faceOrFinger', context: context);
 
@@ -53,22 +38,6 @@ mixin _$LoginStore on _LoginStoreBase, Store {
   set faceOrFinger(bool value) {
     _$faceOrFingerAtom.reportWrite(value, super.faceOrFinger, () {
       super.faceOrFinger = value;
-    });
-  }
-
-  late final _$errOrGoalAtom =
-      Atom(name: '_LoginStoreBase.errOrGoal', context: context);
-
-  @override
-  bool get errOrGoal {
-    _$errOrGoalAtom.reportRead();
-    return super.errOrGoal;
-  }
-
-  @override
-  set errOrGoal(bool value) {
-    _$errOrGoalAtom.reportWrite(value, super.errOrGoal, () {
-      super.errOrGoal = value;
     });
   }
 
@@ -197,28 +166,6 @@ mixin _$LoginStore on _LoginStoreBase, Store {
       ActionController(name: '_LoginStoreBase', context: context);
 
   @override
-  dynamic setErrOrGoal(dynamic value) {
-    final _$actionInfo = _$_LoginStoreBaseActionController.startAction(
-        name: '_LoginStoreBase.setErrOrGoal');
-    try {
-      return super.setErrOrGoal(value);
-    } finally {
-      _$_LoginStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic setMsg(dynamic value) {
-    final _$actionInfo = _$_LoginStoreBaseActionController.startAction(
-        name: '_LoginStoreBase.setMsg');
-    try {
-      return super.setMsg(value);
-    } finally {
-      _$_LoginStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   dynamic setUser(dynamic value) {
     final _$actionInfo = _$_LoginStoreBaseActionController.startAction(
         name: '_LoginStoreBase.setUser');
@@ -266,9 +213,7 @@ mixin _$LoginStore on _LoginStoreBase, Store {
   String toString() {
     return '''
 supportState: ${supportState},
-msg: ${msg},
 faceOrFinger: ${faceOrFinger},
-errOrGoal: ${errOrGoal},
 loginStorage: ${loginStorage},
 canCheckBiometrics: ${canCheckBiometrics},
 availableBiometrics: ${availableBiometrics},

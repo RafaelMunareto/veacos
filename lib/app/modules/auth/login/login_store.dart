@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:local_auth/local_auth.dart';
@@ -23,6 +22,7 @@ abstract class _LoginStoreBase with Store {
 
   _LoginStoreBase() {
     buscaTheme();
+    checkSupportDevice();
   }
 
   buscaTheme() {
@@ -39,22 +39,10 @@ abstract class _LoginStoreBase with Store {
   SupportState supportState = SupportState.unknown;
 
   @observable
-  String msg = '';
-
-  @observable
   bool faceOrFinger = true;
 
   @observable
-  bool errOrGoal = false;
-
-  @observable
   List<String>? loginStorage;
-
-  @action
-  setErrOrGoal(value) => errOrGoal = value;
-
-  @action
-  setMsg(value) => msg = value;
 
   //biometric
   @observable
@@ -85,23 +73,21 @@ abstract class _LoginStoreBase with Store {
         .getLoginDio(client.email.trim(), client.password)
         .then((value) async {
       client.setLoading(false);
-      setErrOrGoal(false);
+      client.setMsgErrOrGoal(false);
       UserModel user = UserModel.fromJson(value.data);
       SessionManager().set("token", user.jwtToken);
       await storage.put('token', [user.jwtToken]);
       await storage.put('user', [jsonEncode(user)]);
-      await storage.put('biometric', [
-        textToMd5(client.email.toLowerCase().trim()),
-        textToMd5(client.password)
-      ]);
+      await storage.put(
+          'biometric', [client.email.toLowerCase().trim(), client.password]);
       await storage.put('login-normal', [
         textToMd5(client.email.toLowerCase().trim()),
         textToMd5(client.password)
       ]);
     }).catchError((error) {
       client.setLoading(false);
-      setErrOrGoal(false);
-      setMsg(error?.message);
+      client.setMsgErrOrGoal(false);
+      client.setMsg(error?.message);
     }).whenComplete(() => Modular.to.navigate('/home/'));
   }
 
@@ -124,13 +110,13 @@ abstract class _LoginStoreBase with Store {
         });
       }).onError((error, stackTrace) {
         client.setLoading(false);
-        setErrOrGoal(false);
-        setMsg(error.toString());
+        client.setMsgErrOrGoal(false);
+        client.setMsg(error.toString());
       });
     } catch (erro) {
       client.setLoading(false);
-      setErrOrGoal(false);
-      setMsg(erro.toString());
+      client.setMsgErrOrGoal(false);
+      client.setMsg(erro);
     }
   }
 
@@ -164,7 +150,7 @@ abstract class _LoginStoreBase with Store {
               .getLoginDio(loginStorage![0], loginStorage![1])
               .then((value) async {
             client.setLoading(false);
-            setErrOrGoal(false);
+            client.setMsgErrOrGoal(false);
             UserModel user = UserModel.fromJson(value.data);
             SessionManager().set("token", user.jwtToken);
             await storage.put('token', [user.jwtToken]);
@@ -174,8 +160,8 @@ abstract class _LoginStoreBase with Store {
             Modular.to.navigate('/home/');
           }).catchError((error) {
             client.setLoading(false);
-            setErrOrGoal(false);
-            setMsg(error.response?.data['error'] ?? error?.message);
+            client.setMsgErrOrGoal(false);
+            client.setMsg(error?.message);
           });
         }
       }
@@ -195,14 +181,12 @@ abstract class _LoginStoreBase with Store {
   @action
   checkSupportDevice() async {
     await getStorageLogin();
-    if (!kIsWeb && defaultTargetPlatform != TargetPlatform.windows) {
-      await bio.isDeviceSupported().then((isSupported) => supportState =
-          isSupported && loginStorage != null
-              ? SupportState.supported
-              : SupportState.unsupported);
-      await checkBiometrics();
-      await getAvailableBiometrics();
-    }
+    await bio.isDeviceSupported().then((isSupported) => supportState =
+        isSupported && loginStorage != null
+            ? SupportState.supported
+            : SupportState.unsupported);
+    await checkBiometrics();
+    await getAvailableBiometrics();
   }
 
   @action
@@ -212,12 +196,12 @@ abstract class _LoginStoreBase with Store {
         if (value.isNotEmpty) {
           auth.getLoginDio(value[0], value[1]).then((value) {
             client.setLoading(false);
-            setErrOrGoal(false);
+            client.setMsgErrOrGoal(false);
             Modular.to.navigate('/home/');
           }).catchError((error) {
             client.setLoading(false);
-            setErrOrGoal(false);
-            setMsg(error.response?.data['error'] ?? error?.message);
+            client.setMsgErrOrGoal(false);
+            client.setMsg(error.response?.data['error'] ?? error?.message);
           });
         }
       }

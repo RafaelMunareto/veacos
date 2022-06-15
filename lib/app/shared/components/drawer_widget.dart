@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:veacos/app/app_widget.dart';
 import 'package:veacos/app/modules/home/home_store.dart';
 import 'package:veacos/app/shared/utils/themes/theme.dart';
 
 class DrawerWidget extends StatefulWidget {
-  final bool theme;
-
-  const DrawerWidget({Key? key, this.theme = false}) : super(key: key);
+  const DrawerWidget({Key? key}) : super(key: key);
 
   @override
   State<DrawerWidget> createState() => _DrawerWidgetState();
@@ -23,6 +22,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       name = 'Rafael Menezes Munareto';
       photo = 'assets/img/munareto.jpg';
     });
+
     super.initState();
   }
 
@@ -37,7 +37,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               borderRadius: const BorderRadius.only(
                   bottomRight: Radius.circular(20.0),
                   bottomLeft: Radius.circular(20.0)),
-              color: widget.theme
+              color: store.client.theme
                   ? darkThemeData(context).primaryColor
                   : lightThemeData(context).primaryColor,
             ),
@@ -70,7 +70,18 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ),
           ListTile(
             leading: const Icon(Icons.sunny, color: Colors.amber),
-            title: Switch(value: true, onChanged: (_) {}),
+            title: Switch(
+                value: store.client.theme,
+                onChanged: (state) {
+                  setState(() {
+                    AppWidget.of(context)!
+                        .changeTheme(state ? ThemeMode.dark : ThemeMode.light);
+                    store.changeSwitch(state);
+                    setState(() {
+                      store.client.theme = state;
+                    });
+                  });
+                }),
             trailing: const Icon(
               Icons.nightlight_round,
               color: Colors.blueGrey,

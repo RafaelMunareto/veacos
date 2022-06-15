@@ -48,10 +48,25 @@ abstract class _ClientAuthStoreBase with Store {
     setPassword('');
   }
 
+  @observable
+  bool checkError = false;
+
+  @observable
+  String msg = '';
+
+  @action
+  setMsg(value) => msg = value;
+
+  @observable
+  bool msgErrOrGoal = false;
+
   @computed
   bool get isValidLogin {
     return validateEmail() == null && validatePassword() == null;
   }
+
+  @action
+  setMsgErrOrGoal(value) => msgErrOrGoal = value;
 
   @computed
   bool get isValidSignup {

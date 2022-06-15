@@ -17,61 +17,8 @@ mixin _$SignupStore on _SignupStoreBase, Store {
               name: '_SignupStoreBase.isValidRegisterEmailGrupo'))
       .value;
 
-  late final _$msgAtom = Atom(name: '_SignupStoreBase.msg', context: context);
-
-  @override
-  String get msg {
-    _$msgAtom.reportRead();
-    return super.msg;
-  }
-
-  @override
-  set msg(String value) {
-    _$msgAtom.reportWrite(value, super.msg, () {
-      super.msg = value;
-    });
-  }
-
-  late final _$msgErrOrGoalAtom =
-      Atom(name: '_SignupStoreBase.msgErrOrGoal', context: context);
-
-  @override
-  bool get msgErrOrGoal {
-    _$msgErrOrGoalAtom.reportRead();
-    return super.msgErrOrGoal;
-  }
-
-  @override
-  set msgErrOrGoal(bool value) {
-    _$msgErrOrGoalAtom.reportWrite(value, super.msgErrOrGoal, () {
-      super.msgErrOrGoal = value;
-    });
-  }
-
   late final _$_SignupStoreBaseActionController =
       ActionController(name: '_SignupStoreBase', context: context);
-
-  @override
-  dynamic setMsgErrOrGoal(dynamic value) {
-    final _$actionInfo = _$_SignupStoreBaseActionController.startAction(
-        name: '_SignupStoreBase.setMsgErrOrGoal');
-    try {
-      return super.setMsgErrOrGoal(value);
-    } finally {
-      _$_SignupStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic setMsg(dynamic value) {
-    final _$actionInfo = _$_SignupStoreBaseActionController.startAction(
-        name: '_SignupStoreBase.setMsg');
-    try {
-      return super.setMsg(value);
-    } finally {
-      _$_SignupStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   void submit() {
@@ -87,8 +34,6 @@ mixin _$SignupStore on _SignupStoreBase, Store {
   @override
   String toString() {
     return '''
-msg: ${msg},
-msgErrOrGoal: ${msgErrOrGoal},
 isValidRegisterEmailGrupo: ${isValidRegisterEmailGrupo}
     ''';
   }

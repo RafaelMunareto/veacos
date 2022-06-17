@@ -84,7 +84,7 @@ class ForgetPageState extends State<ForgetPage> {
                       label: 'ENVIAR SENHA',
                       theme: store.client.theme,
                       width: size.width * 0.5,
-                      loading: store.client.isValidLogin,
+                      loading: store.client.loading,
                       function:
                           store.client.isValidEmail ? store.submit : null),
                 );

@@ -70,6 +70,22 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
     });
   }
 
+  late final _$codeAtom =
+      Atom(name: '_ClientAuthStoreBase.code', context: context);
+
+  @override
+  String get code {
+    _$codeAtom.reportRead();
+    return super.code;
+  }
+
+  @override
+  set code(String value) {
+    _$codeAtom.reportWrite(value, super.code, () {
+      super.code = value;
+    });
+  }
+
   late final _$nameAtom =
       Atom(name: '_ClientAuthStoreBase.name', context: context);
 
@@ -208,6 +224,28 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
   }
 
   @override
+  dynamic buscaTheme() {
+    final _$actionInfo = _$_ClientAuthStoreBaseActionController.startAction(
+        name: '_ClientAuthStoreBase.buscaTheme');
+    try {
+      return super.buscaTheme();
+    } finally {
+      _$_ClientAuthStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setCode(dynamic value) {
+    final _$actionInfo = _$_ClientAuthStoreBaseActionController.startAction(
+        name: '_ClientAuthStoreBase.setCode');
+    try {
+      return super.setCode(value);
+    } finally {
+      _$_ClientAuthStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic setName(dynamic value) {
     final _$actionInfo = _$_ClientAuthStoreBaseActionController.startAction(
         name: '_ClientAuthStoreBase.setName');
@@ -289,6 +327,7 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
     return '''
 loading: ${loading},
 theme: ${theme},
+code: ${code},
 name: ${name},
 email: ${email},
 password: ${password},

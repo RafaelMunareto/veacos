@@ -92,7 +92,7 @@ class AuthRepository implements IAuthRepository {
     );
 
     response = await dio.get(
-      '/users/mail/change_password/$email',
+      'users/mail/change_password/$email',
     );
     DioStruture().statusRequest(response);
     return response;

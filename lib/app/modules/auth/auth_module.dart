@@ -1,3 +1,4 @@
+import 'package:veacos/app/modules/auth/change/change_module.dart';
 import 'package:veacos/app/modules/auth/forget/forget_module.dart';
 import 'package:veacos/app/modules/auth/login/login_module.dart';
 import 'package:veacos/app/modules/auth/shared/client_auth_store.dart';
@@ -18,5 +19,7 @@ class AuthModule extends Module {
         module: SignupModule(), transition: TransitionType.leftToRightWithFade),
     ModuleRoute('/forget',
         module: ForgetModule(), transition: TransitionType.leftToRightWithFade),
+    ModuleRoute('/change',
+        module: ChangeModule(), transition: TransitionType.leftToRightWithFade),
   ];
 }

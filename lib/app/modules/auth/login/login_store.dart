@@ -21,18 +21,8 @@ abstract class _LoginStoreBase with Store {
   final LocalAuthentication bio = Modular.get();
 
   _LoginStoreBase() {
-    buscaTheme();
+    client.buscaTheme();
     checkSupportDevice();
-  }
-
-  buscaTheme() {
-    storage.get('theme').then((value) {
-      if (value?[0] == 'dark') {
-        client.setTheme(true);
-      } else {
-        client.setTheme(false);
-      }
-    });
   }
 
   @observable

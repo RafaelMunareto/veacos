@@ -1,10 +1,14 @@
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 
 part 'client_auth_store.g.dart';
 
 class ClientAuthStore = _ClientAuthStoreBase with _$ClientAuthStore;
 
 abstract class _ClientAuthStoreBase with Store {
+  ILocalStorage storage = Modular.get();
+
   @observable
   bool loading = false;
 
@@ -16,6 +20,23 @@ abstract class _ClientAuthStoreBase with Store {
 
   @action
   setTheme(value) => theme = value;
+
+  @action
+  buscaTheme() {
+    storage.get('theme').then((value) {
+      if (value?[0] == 'dark') {
+        setTheme(true);
+      } else {
+        setTheme(false);
+      }
+    });
+  }
+
+  @observable
+  String code = '';
+
+  @action
+  setCode(value) => code = value;
 
   @observable
   String name = '';

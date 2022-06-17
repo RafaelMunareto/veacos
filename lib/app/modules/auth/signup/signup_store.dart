@@ -19,17 +19,7 @@ abstract class _SignupStoreBase with Store {
   AuthController auth = Modular.get();
 
   _SignupStoreBase() {
-    buscaTheme();
-  }
-
-  buscaTheme() {
-    storage.get('theme').then((value) {
-      if (value?[0] == 'dark') {
-        client.setTheme(true);
-      } else {
-        client.setTheme(false);
-      }
-    });
+    client.buscaTheme();
   }
 
   @computed

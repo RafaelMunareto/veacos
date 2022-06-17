@@ -32,8 +32,7 @@ class _AppWidgetState extends State<AppWidget> {
     if (defaultTargetPlatform == TargetPlatform.android) {
       _sub = uriLinkStream.listen((Uri? uri) {
         if (!mounted) return;
-        Modular.to
-            .navigate('/auth/change/?code=${uri.toString().split('code=')[1]}');
+        Modular.to.navigate(uri.toString().split('*')[1]);
       }, onError: (Object err) {
         if (!mounted) return;
       });

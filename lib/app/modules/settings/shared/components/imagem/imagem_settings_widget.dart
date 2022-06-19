@@ -58,13 +58,13 @@ class _ImagemSettingsWidgetState extends State<ImagemSettingsWidget>
                       : Container(
                           width: 170.0,
                           height: 170.0,
-                          decoration: store.client.settings.urlImage != ''
+                          decoration: store.client.settings.foto != ''
                               ? BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
                                     fit: BoxFit.fill,
                                     image: CachedNetworkImageProvider(
-                                      store.client.settings.urlImage,
+                                      store.client.settings.foto,
                                     ),
                                   ),
                                 )

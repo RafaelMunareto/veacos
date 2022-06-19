@@ -59,10 +59,10 @@ abstract class _SettingsStoreBase with Store {
     FormData formData = FormData.fromMap(
       {
         "urlImage": MultipartFile.fromBytes(listData,
-            filename: client.settings.urlImage ==
-                    DioStruture().baseUrlMunatasks + 'files'
-                ? client.settings.id
-                : client.settings.urlImage),
+            filename:
+                client.settings.foto == DioStruture().baseUrlMunatasks + 'files'
+                    ? client.settings.id
+                    : client.settings.foto),
       },
     );
     try {

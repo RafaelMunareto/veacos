@@ -3,13 +3,13 @@ import 'package:veacos/app/shared/auth/model/user_client.model.dart';
 
 class SettingsModel {
   dynamic id;
-  String urlImage;
+  String foto;
   GrupoModel? grupo;
   UserClientModel? user;
 
   SettingsModel({
     this.id,
-    this.urlImage = '',
+    this.foto = '',
     this.grupo,
     this.user,
   });
@@ -17,18 +17,18 @@ class SettingsModel {
   factory SettingsModel.fromDocument(doc) {
     return SettingsModel(
       id: doc['id'],
-      urlImage: doc['urlImage'],
+      foto: doc['foto'],
       grupo: doc['grupo'],
-      user: doc['urlImage'],
+      user: doc['user'],
     );
   }
 
   factory SettingsModel.fromJson(json) {
     return SettingsModel(
       id: json['id'],
-      urlImage: json['urlImage'],
+      foto: json['foto'],
       grupo: json['grupo'],
-      user: json['urlImage'],
+      user: json['user'],
     );
   }
 

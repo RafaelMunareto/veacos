@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
-import 'package:universal_html/html.dart';
 import 'package:veacos/app/modules/settings/shared/controller/client_settings_store.dart';
 import 'package:veacos/app/modules/settings/shared/services/interfaces/settings_service_interfaces.dart';
 import 'package:veacos/app/shared/auth/model/user_client.model.dart';
@@ -34,13 +34,13 @@ abstract class _SettingsStoreBase with Store {
   }
 
   getUid() {
-    storage.get('userDio').then((value) {
+    storage.get('user').then((value) {
       client.setUser(UserClientModel.fromJson(jsonDecode(value[0])));
     });
   }
 
   getSettings() {
-    settingsService.show(client.user.id).then((value) async {
+    settingsService.show(client.user.email).then((value) async {
       await client.setSettings(value);
     }).whenComplete(() {
       client.setLoading(false);

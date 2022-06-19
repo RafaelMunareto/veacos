@@ -88,6 +88,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             ),
           ),
           ListTile(
+            onTap: () => Modular.to.navigate('/settings/'),
+            leading: const Icon(Icons.settings),
+            trailing: const Text('Settings'),
+          ),
+          ListTile(
             onTap: () => store.auth.logout(),
             leading: const Icon(Icons.logout),
             trailing: const Text('Sair'),

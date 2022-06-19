@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:veacos/app/modules/auth/auth_module.dart';
 import 'package:veacos/app/modules/home/home_module.dart';
+import 'package:veacos/app/modules/settings/settings_module.dart';
 import 'package:veacos/app/shared/auth/auth_controller.dart';
 import 'package:veacos/app/shared/auth/repositories/auth_repository.dart';
 import 'package:veacos/app/shared/auth/repositories/auth_repository_interface.dart';
@@ -35,6 +36,7 @@ class AppModule extends Module {
     ModuleRoute('/auth',
         module: AuthModule(), transition: TransitionType.rightToLeftWithFade),
     ModuleRoute('/settings',
-        module: AuthModule(), transition: TransitionType.leftToRightWithFade),
+        module: SettingsModule(),
+        transition: TransitionType.leftToRightWithFade),
   ];
 }

@@ -5,7 +5,7 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/auth/shared/client_auth_store.dart';
 import 'package:veacos/app/shared/auth/auth_controller.dart';
-import 'package:veacos/app/shared/auth/model/user_dio_client.model.dart';
+import 'package:veacos/app/shared/auth/model/user_client.model.dart';
 import 'package:veacos/app/shared/auth/model/user_model.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 
@@ -49,7 +49,7 @@ abstract class _SignupStoreBase with Store {
       });
     }).catchError((error) {
       client.setMsgErrOrGoal(false);
-      client.setMsg(error?.message);
+      client.setMsg(client.setMessageError(error));
       client.setLoading(false);
     });
   }

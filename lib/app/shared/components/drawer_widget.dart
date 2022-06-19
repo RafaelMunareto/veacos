@@ -88,7 +88,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             ),
           ),
           ListTile(
-            onTap: () => store.logout(),
+            onTap: () => store.auth.logout(),
             leading: const Icon(Icons.logout),
             trailing: const Text('Sair'),
           ),

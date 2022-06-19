@@ -22,7 +22,7 @@ abstract class _ForgetStoreBase with Store {
       client.setMsg(value?.data);
     }).catchError((error) {
       client.setMsgErrOrGoal(false);
-      client.setMsg(error?.message);
+      client.setMsg(client.setMessageError(error));
     }).whenComplete(() => client.setLoading(false));
   }
 }

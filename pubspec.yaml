@@ -47,18 +47,15 @@ dependencies:
   universal_html: ^2.0.8
   flutter_local_notifications: ^9.5.2
   show_update_dialog: ^1.0.10
-  package_info_plus: ^1.0.6
   responsive_framework: ^0.2.0
   cached_network_image: ^3.2.1
   auto_size_text: ^3.0.0
-  bitsdojo_window: ^0.1.2
   url_launcher: ^6.1.2
   socket_io_client: ^1.0.2
   image_cropper: ^2.0.3
   image_cropper_view: ^0.0.2
   syncfusion_flutter_treemap: ^20.1.59-beta
   uni_links: ^0.5.1
-  app_links: ^3.2.0
 
 dev_dependencies:
   flutter_test:

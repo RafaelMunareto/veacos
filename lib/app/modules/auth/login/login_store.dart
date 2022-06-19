@@ -62,47 +62,52 @@ abstract class _LoginStoreBase with Store {
     await auth
         .getLoginDio(client.email.trim(), client.password)
         .then((value) async {
-      client.setLoading(false);
-      client.setMsgErrOrGoal(false);
-      UserModel user = UserModel.fromJson(value.data);
-      SessionManager().set("token", user.jwtToken);
-      await storage.put('token', [user.jwtToken]);
-      await storage.put('user', [jsonEncode(user)]);
-      await storage.put(
-          'biometric', [client.email.toLowerCase().trim(), client.password]);
-      await storage.put('login-normal', [
-        textToMd5(client.email.toLowerCase().trim()),
-        textToMd5(client.password)
-      ]);
-    }).catchError((error) {
-      client.setLoading(false);
-      client.setMsgErrOrGoal(false);
-      client.setMsg(error?.message);
-    }).whenComplete(() => Modular.to.navigate('/home/'));
+          client.setLoading(false);
+          client.setMsgErrOrGoal(false);
+          UserModel user = UserModel.fromJson(value.data);
+          SessionManager().set("token", user.jwtToken);
+          await storage.put('token', [user.jwtToken]);
+          await storage.put('user', [jsonEncode(user)]);
+          await storage.put('biometric',
+              [client.email.toLowerCase().trim(), client.password]);
+          await storage.put('login-normal', [
+            textToMd5(client.email.toLowerCase().trim()),
+            textToMd5(client.password)
+          ]);
+        })
+        .then((value) => Modular.to.navigate('/home/'))
+        .catchError((error) {
+          client.setLoading(false);
+          client.setMsgErrOrGoal(false);
+          client.setMsg(client.setMessageError(error));
+        });
   }
 
   //gooole
   loginWithGoogle() async {
     client.setLoading(true);
     try {
-      await auth.loginWithGoogle().then((value) {
-        auth.getLoginDio(value.email, value.password).then((e) async {
-          UserModel user = UserModel.fromJson(e.data);
-          await SessionManager().set("token", user.jwtToken);
-          await storage.put('token', [user.jwtToken]);
-          await storage.put('user', [jsonEncode(user)]);
-          await storage.put('login-normal',
-              [textToMd5(value.email), textToMd5(value.password)]);
-          await storage.put(
-              'biometric', [textToMd5(value.email), textToMd5(value.password)]);
-          client.setLoading(false);
-          Modular.to.navigate('/home/');
-        });
-      }).onError((error, stackTrace) {
-        client.setLoading(false);
-        client.setMsgErrOrGoal(false);
-        client.setMsg(error.toString());
-      });
+      await auth
+          .loginWithGoogle()
+          .then((value) {
+            auth.getLoginDio(value.email, value.password).then((e) async {
+              UserModel user = UserModel.fromJson(e.data);
+              await SessionManager().set("token", user.jwtToken);
+              await storage.put('token', [user.jwtToken]);
+              await storage.put('user', [jsonEncode(user)]);
+              await storage.put('login-normal',
+                  [textToMd5(value.email), textToMd5(value.password)]);
+              await storage.put('biometric',
+                  [textToMd5(value.email), textToMd5(value.password)]);
+              client.setLoading(false);
+            });
+          })
+          .then((value) => Modular.to.navigate('/home/'))
+          .onError((error, stackTrace) {
+            client.setLoading(false);
+            client.setMsgErrOrGoal(false);
+            client.setMsg(client.setMessageError(error));
+          });
     } catch (erro) {
       client.setLoading(false);
       client.setMsgErrOrGoal(false);
@@ -139,20 +144,21 @@ abstract class _LoginStoreBase with Store {
           auth
               .getLoginDio(loginStorage![0], loginStorage![1])
               .then((value) async {
-            client.setLoading(false);
-            client.setMsgErrOrGoal(false);
-            UserModel user = UserModel.fromJson(value.data);
-            SessionManager().set("token", user.jwtToken);
-            await storage.put('token', [user.jwtToken]);
-            await storage.put('user', [jsonEncode(user)]);
-            await storage.put('login-normal',
-                [textToMd5(client.email), textToMd5(client.password)]);
-            Modular.to.navigate('/home/');
-          }).catchError((error) {
-            client.setLoading(false);
-            client.setMsgErrOrGoal(false);
-            client.setMsg(error?.message);
-          });
+                client.setLoading(false);
+                client.setMsgErrOrGoal(false);
+                UserModel user = UserModel.fromJson(value.data);
+                SessionManager().set("token", user.jwtToken);
+                await storage.put('token', [user.jwtToken]);
+                await storage.put('user', [jsonEncode(user)]);
+                await storage.put('login-normal',
+                    [textToMd5(client.email), textToMd5(client.password)]);
+              })
+              .then((value) => Modular.to.navigate('/home/'))
+              .catchError((error) {
+                client.setLoading(false);
+                client.setMsgErrOrGoal(false);
+                client.setMsg(client.setMessageError(error));
+              });
         }
       }
     });
@@ -191,7 +197,7 @@ abstract class _LoginStoreBase with Store {
           }).catchError((error) {
             client.setLoading(false);
             client.setMsgErrOrGoal(false);
-            client.setMsg(error.response?.data['error'] ?? error?.message);
+            client.setMsg(client.setMessageError(error));
           });
         }
       }

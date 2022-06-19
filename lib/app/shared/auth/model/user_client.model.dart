@@ -1,16 +1,19 @@
 class UserClientModel {
-  dynamic name;
-  dynamic email;
-  dynamic password;
+  String id;
+  String name;
+  String email;
+  String password;
 
   UserClientModel({
-    this.name,
-    this.email,
-    this.password,
+    this.id = '',
+    this.name = '',
+    this.email = '',
+    this.password = '',
   });
 
   factory UserClientModel.fromDocument(doc) {
     return UserClientModel(
+      id: doc['id'],
       name: doc['name'],
       email: doc['email'],
       password: doc['password'],
@@ -19,6 +22,7 @@ class UserClientModel {
 
   factory UserClientModel.fromMap(Map<String, dynamic> map) {
     return UserClientModel(
+      id: map["id"],
       name: map["name"],
       email: map["email"],
       password: map["password"],
@@ -27,6 +31,7 @@ class UserClientModel {
 
   factory UserClientModel.fromJson(Map<String, dynamic> json) {
     return UserClientModel(
+      id: json['id'],
       name: json['name'],
       email: json['email'],
       password: json["password"],

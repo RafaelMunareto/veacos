@@ -1,6 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
+import 'package:veacos/app/shared/utils/error_model.dart';
 
 part 'client_auth_store.g.dart';
 
@@ -145,5 +146,10 @@ abstract class _ClientAuthStoreBase with Store {
       return 'Necessário ser maior que 6 caracteres';
     }
     return null;
+  }
+
+  setMessageError(error) {
+    ErrorModel errorModel = ErrorModel.fromJson(error.response.data);
+    return 'Erro: ${errorModel.statusCode}, ${errorModel.message}';
   }
 }

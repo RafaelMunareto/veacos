@@ -1,4 +1,4 @@
-import 'package:veacos/app/shared/auth/model/user_dio_client.model.dart';
+import 'package:veacos/app/shared/auth/model/user_client.model.dart';
 
 abstract class IAuthRepository {
   Future loginDio(email, password);

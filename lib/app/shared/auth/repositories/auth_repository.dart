@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:veacos/app/shared/auth/model/user_dio_client.model.dart';
+import 'package:veacos/app/shared/auth/model/user_client.model.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_share.dart';
 import 'package:veacos/app/shared/utils/dio_struture.dart';
@@ -27,7 +27,7 @@ class AuthRepository implements IAuthRepository {
     final GoogleSignInAuthentication googleAuth =
         await googleUser!.authentication;
     UserClientModel user = UserClientModel(
-      name: googleUser.displayName,
+      name: googleUser.displayName ?? '',
       email: googleUser.email,
       password: '',
     );
@@ -74,8 +74,8 @@ class AuthRepository implements IAuthRepository {
       ),
     );
 
-    response = await dio.post('users/signin',
-        data: jsonEncode({"email": email, "password": password}));
+    response = await dio
+        .post('users/signin', data: {"email": email, "password": password});
     DioStruture().statusRequest(response);
 
     return response;

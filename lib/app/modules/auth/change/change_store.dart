@@ -1,7 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/auth/shared/client_auth_store.dart';
-import 'package:veacos/app/modules/home/shared/controller/client_store.dart';
 import 'package:veacos/app/shared/auth/auth_controller.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 
@@ -27,10 +26,10 @@ abstract class _ChangeStoreBase with Store {
         client.setLoading(false);
         client.setMsgErrOrGoal(true);
         client.setMsg('Senha alterada com sucesso!');
-      }).catchError((erro) {
+      }).catchError((error) {
         client.setLoading(false);
         client.setMsgErrOrGoal(false);
-        client.setMsg(erro?.message);
+        client.setMsg(client.setMessageError(error));
       });
     } else {
       client.setMsgErrOrGoal(false);

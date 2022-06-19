@@ -6,7 +6,7 @@ import 'package:veacos/app/shared/auth/repositories/biometric_repository_interfa
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_share.dart';
 
-import 'model/user_dio_client.model.dart';
+import 'model/user_client.model.dart';
 part 'auth_controller.g.dart';
 
 class AuthController = _AuthControllerBase with _$AuthController;

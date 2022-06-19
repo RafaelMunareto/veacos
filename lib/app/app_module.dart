@@ -34,5 +34,7 @@ class AppModule extends Module {
         module: HomeModule(), transition: TransitionType.rightToLeftWithFade),
     ModuleRoute('/auth',
         module: AuthModule(), transition: TransitionType.rightToLeftWithFade),
+    ModuleRoute('/settings',
+        module: AuthModule(), transition: TransitionType.leftToRightWithFade),
   ];
 }

@@ -61,13 +61,13 @@ mixin _$ClientSettingsStore on _ClientSettingsStoreBase, Store {
       Atom(name: '_ClientSettingsStoreBase.user', context: context);
 
   @override
-  UserClientModel get user {
+  UserModel get user {
     _$userAtom.reportRead();
     return super.user;
   }
 
   @override
-  set user(UserClientModel value) {
+  set user(UserModel value) {
     _$userAtom.reportWrite(value, super.user, () {
       super.user = value;
     });
@@ -131,6 +131,17 @@ mixin _$ClientSettingsStore on _ClientSettingsStoreBase, Store {
         name: '_ClientSettingsStoreBase.buscaTheme');
     try {
       return super.buscaTheme();
+    } finally {
+      _$_ClientSettingsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic getUid() {
+    final _$actionInfo = _$_ClientSettingsStoreBaseActionController.startAction(
+        name: '_ClientSettingsStoreBase.getUid');
+    try {
+      return super.getUid();
     } finally {
       _$_ClientSettingsStoreBaseActionController.endAction(_$actionInfo);
     }

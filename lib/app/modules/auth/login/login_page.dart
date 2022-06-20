@@ -130,14 +130,14 @@ class LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                          store.supportState == SupportState.supported
+                          store.client.supportState == SupportState.supported
                               ? GestureDetector(
                                   onTap: store.authenticateBiometric,
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(
                                         horizontal: 20),
                                     width: 64,
-                                    child: store.faceOrFinger
+                                    child: store.client.faceOrFinger
                                         ? const Image(
                                             image: AssetImage(
                                                 'assets/img/face.png'))

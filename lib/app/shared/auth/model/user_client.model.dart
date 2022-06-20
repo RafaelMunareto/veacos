@@ -17,14 +17,6 @@ class UserClientModel {
     );
   }
 
-  factory UserClientModel.fromMap(Map<String, dynamic> map) {
-    return UserClientModel(
-      name: map["name"],
-      email: map["email"],
-      password: map["password"],
-    );
-  }
-
   factory UserClientModel.fromJson(Map<String, dynamic> json) {
     return UserClientModel(
       name: json['name'],

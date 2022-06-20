@@ -198,6 +198,118 @@ mixin _$ClientAuthStore on _ClientAuthStoreBase, Store {
     });
   }
 
+  late final _$supportStateAtom =
+      Atom(name: '_ClientAuthStoreBase.supportState', context: context);
+
+  @override
+  SupportState get supportState {
+    _$supportStateAtom.reportRead();
+    return super.supportState;
+  }
+
+  @override
+  set supportState(SupportState value) {
+    _$supportStateAtom.reportWrite(value, super.supportState, () {
+      super.supportState = value;
+    });
+  }
+
+  late final _$faceOrFingerAtom =
+      Atom(name: '_ClientAuthStoreBase.faceOrFinger', context: context);
+
+  @override
+  bool get faceOrFinger {
+    _$faceOrFingerAtom.reportRead();
+    return super.faceOrFinger;
+  }
+
+  @override
+  set faceOrFinger(bool value) {
+    _$faceOrFingerAtom.reportWrite(value, super.faceOrFinger, () {
+      super.faceOrFinger = value;
+    });
+  }
+
+  late final _$loginStorageAtom =
+      Atom(name: '_ClientAuthStoreBase.loginStorage', context: context);
+
+  @override
+  List<String>? get loginStorage {
+    _$loginStorageAtom.reportRead();
+    return super.loginStorage;
+  }
+
+  @override
+  set loginStorage(List<String>? value) {
+    _$loginStorageAtom.reportWrite(value, super.loginStorage, () {
+      super.loginStorage = value;
+    });
+  }
+
+  late final _$canCheckBiometricsAtom =
+      Atom(name: '_ClientAuthStoreBase.canCheckBiometrics', context: context);
+
+  @override
+  bool get canCheckBiometrics {
+    _$canCheckBiometricsAtom.reportRead();
+    return super.canCheckBiometrics;
+  }
+
+  @override
+  set canCheckBiometrics(bool value) {
+    _$canCheckBiometricsAtom.reportWrite(value, super.canCheckBiometrics, () {
+      super.canCheckBiometrics = value;
+    });
+  }
+
+  late final _$availableBiometricsAtom =
+      Atom(name: '_ClientAuthStoreBase.availableBiometrics', context: context);
+
+  @override
+  List<BiometricType> get availableBiometrics {
+    _$availableBiometricsAtom.reportRead();
+    return super.availableBiometrics;
+  }
+
+  @override
+  set availableBiometrics(List<BiometricType> value) {
+    _$availableBiometricsAtom.reportWrite(value, super.availableBiometrics, () {
+      super.availableBiometrics = value;
+    });
+  }
+
+  late final _$authorizedAtom =
+      Atom(name: '_ClientAuthStoreBase.authorized', context: context);
+
+  @override
+  String get authorized {
+    _$authorizedAtom.reportRead();
+    return super.authorized;
+  }
+
+  @override
+  set authorized(String value) {
+    _$authorizedAtom.reportWrite(value, super.authorized, () {
+      super.authorized = value;
+    });
+  }
+
+  late final _$isAuthenticatingAtom =
+      Atom(name: '_ClientAuthStoreBase.isAuthenticating', context: context);
+
+  @override
+  bool get isAuthenticating {
+    _$isAuthenticatingAtom.reportRead();
+    return super.isAuthenticating;
+  }
+
+  @override
+  set isAuthenticating(bool value) {
+    _$isAuthenticatingAtom.reportWrite(value, super.isAuthenticating, () {
+      super.isAuthenticating = value;
+    });
+  }
+
   late final _$_ClientAuthStoreBaseActionController =
       ActionController(name: '_ClientAuthStoreBase', context: context);
 
@@ -335,6 +447,13 @@ confirmPassword: ${confirmPassword},
 checkError: ${checkError},
 msg: ${msg},
 msgErrOrGoal: ${msgErrOrGoal},
+supportState: ${supportState},
+faceOrFinger: ${faceOrFinger},
+loginStorage: ${loginStorage},
+canCheckBiometrics: ${canCheckBiometrics},
+availableBiometrics: ${availableBiometrics},
+authorized: ${authorized},
+isAuthenticating: ${isAuthenticating},
 isValidLogin: ${isValidLogin},
 isValidSignup: ${isValidSignup},
 isValidChangePassword: ${isValidChangePassword},

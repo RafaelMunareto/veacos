@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -9,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/settings/shared/controller/client_settings_store.dart';
 import 'package:veacos/app/modules/settings/shared/services/interfaces/settings_service_interfaces.dart';
-import 'package:veacos/app/shared/auth/model/user_client.model.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/utils/dio_struture.dart';
 
@@ -28,15 +26,9 @@ abstract class _SettingsStoreBase with Store {
   }
 
   getList() async {
+    await client.getUid();
     await client.buscaTheme();
-    await getUid();
     await getSettings();
-  }
-
-  getUid() {
-    storage.get('user').then((value) {
-      client.setUser(UserClientModel.fromJson(jsonDecode(value[0])));
-    });
   }
 
   getSettings() {

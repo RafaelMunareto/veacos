@@ -1,5 +1,8 @@
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:mobx/mobx.dart';
+import 'package:veacos/app/modules/auth/login/login_store.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/utils/error_model.dart';
 
@@ -9,6 +12,22 @@ class ClientAuthStore = _ClientAuthStoreBase with _$ClientAuthStore;
 
 abstract class _ClientAuthStoreBase with Store {
   ILocalStorage storage = Modular.get();
+  final key = Key.fromUtf8('put32charactershereeeeeeeeeeeee!');
+  final iv = IV.fromUtf8('put16characters!');
+
+  //encrypt
+  String encryptMyData(String text) {
+    final e = Encrypter(AES(key, mode: AESMode.cbc));
+    final encryptedData = e.encrypt(text, iv: iv);
+    return encryptedData.base64;
+  }
+
+  //dycrypt
+  String decryptMyData(String text) {
+    final e = Encrypter(AES(key, mode: AESMode.cbc));
+    final decryptedData = e.decrypt(Encrypted.fromBase64(text), iv: iv);
+    return decryptedData;
+  }
 
   @observable
   bool loading = false;
@@ -89,6 +108,28 @@ abstract class _ClientAuthStoreBase with Store {
 
   @action
   setMsgErrOrGoal(value) => msgErrOrGoal = value;
+
+  @observable
+  SupportState supportState = SupportState.unknown;
+
+  @observable
+  bool faceOrFinger = true;
+
+  @observable
+  List<String>? loginStorage;
+
+  //biometric
+  @observable
+  bool canCheckBiometrics = false;
+
+  @observable
+  List<BiometricType> availableBiometrics = [];
+
+  @observable
+  String authorized = 'Não autorizado!';
+
+  @observable
+  bool isAuthenticating = false;
 
   @computed
   bool get isValidSignup {

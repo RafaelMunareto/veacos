@@ -2,13 +2,13 @@ import 'package:veacos/app/modules/settings/shared/model/grupo_model.dart';
 import 'package:veacos/app/shared/auth/model/user_client.model.dart';
 
 class SettingsModel {
-  dynamic id;
+  String id;
   String foto;
   GrupoModel? grupo;
   UserClientModel? user;
 
   SettingsModel({
-    this.id,
+    this.id = '',
     this.foto = '',
     this.grupo,
     this.user,

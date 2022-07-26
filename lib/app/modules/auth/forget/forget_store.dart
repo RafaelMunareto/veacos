@@ -18,8 +18,8 @@ class ForgetStore {
   setMsgErrOrGoal(value) => msgErrOrGoal$.value = value;
 
   submit() async {
-    await client.setLoading(true);
-    auth.sendEmailChangePassword(client.email$.value).then((value) async {
+    client.setLoading(true);
+    await auth.sendEmailChangePassword(client.email$.value).then((value) async {
       setMsgErrOrGoal(true);
       setMsg(value?.data);
     }).catchError((error) {

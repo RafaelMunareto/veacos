@@ -27,27 +27,25 @@ class LoginStore {
   setMsgErrOrGoal(value) => msgErrOrGoal$.value = value;
 
   submit() async {
-    client.setLoading(true);
+    await client.setLoading(true);
     await auth
         .getLoginDio(client.email$.value, client.password$.value)
         .then((value) async {
-          setMsgErrOrGoal(false);
-          UserModel user = UserModel.fromMap(value.data);
-          SessionManager().set("token", user.jwtToken);
-          await storage.put('token', [user.jwtToken]);
-          await storage.put('user', [jsonEncode(value.data)]);
-          await storage
-              .put('biometric', [client.email$.value, client.password$.value]);
-          await storage.put(
-              'login-normal', [client.email$.value, client.password$.value]);
-        })
-        .then((value) => Modular.to.navigate('/home/'))
-        .catchError((error) {
-          client.setLoading(false);
-          setMsgErrOrGoal(false);
-          setMsg(client.setMessageError(error));
-        })
-        .whenComplete(() => client.setLoading(false));
+      setMsgErrOrGoal(false);
+      UserModel user = UserModel.fromMap(value.data);
+      SessionManager().set("token", user.jwtToken);
+      await storage.put('token', [user.jwtToken]);
+      await storage.put('user', [jsonEncode(value.data)]);
+      await storage
+          .put('biometric', [client.email$.value, client.password$.value]);
+      await storage
+          .put('login-normal', [client.email$.value, client.password$.value]);
+      Modular.to.navigate('/home/');
+    }).catchError((error) {
+      client.setLoading(false);
+      setMsgErrOrGoal(false);
+      setMsg(client.setMessageError(error));
+    }).whenComplete(() => client.setLoading(false));
   }
 
   loginWithGoogle() async {
@@ -132,7 +130,9 @@ class LoginStore {
     await getStorageLogin();
     await bio.isDeviceSupported().then((isSupported) =>
         client.supportState$.value =
-            isSupported ? SupportState.supported : SupportState.unsupported);
+            isSupported && client.loginStorage$.value.isNotEmpty
+                ? SupportState.supported
+                : SupportState.unsupported);
     await checkBiometrics();
     await getAvailableBiometrics();
   }

@@ -44,6 +44,13 @@ class ChangePageState extends State<ChangePage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => store.client.cleanVariables());
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
@@ -95,7 +102,7 @@ class ChangePageState extends State<ChangePage> {
                 }),
             SizedBox(height: size.height * 0.05),
             ValueListenableBuilder(
-                valueListenable: store.client.password$,
+                valueListenable: store.client.confirmPassword$,
                 builder: (context, value, child) {
                   return Container(
                     alignment: Alignment.centerRight,

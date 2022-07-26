@@ -32,6 +32,13 @@ class SignupPageState extends State<SignupPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => store.client.cleanVariables());
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
@@ -102,7 +109,7 @@ class SignupPageState extends State<SignupPage> {
                   }),
               SizedBox(height: size.height * 0.05),
               ValueListenableBuilder(
-                  valueListenable: store.client.loading$,
+                  valueListenable: store.client.confirmPassword$,
                   builder: (context, value, child) {
                     return Container(
                       alignment: Alignment.centerRight,

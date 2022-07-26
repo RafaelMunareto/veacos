@@ -21,18 +21,24 @@ class ForgetPageState extends State<ForgetPage> {
 
   submit() async {
     await store.submit();
-    store.msg$.addListener(() {
-      if (store.msg$.value != '') {
-        SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
-            message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
-        if (store.msgErrOrGoal$.value) {
-          Future.delayed(
-            const Duration(seconds: 2),
-            () => store.client.cleanVariables(),
-          );
-        }
+    if (store.msg$.value != '') {
+      SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
+          message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
+      if (store.msgErrOrGoal$.value) {
+        Future.delayed(
+          const Duration(seconds: 2),
+          () => store.client.cleanVariables(),
+        );
       }
-    });
+    }
+    store.setMsg('');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => store.client.cleanVariables());
   }
 
   @override

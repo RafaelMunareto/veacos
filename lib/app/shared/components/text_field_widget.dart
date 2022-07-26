@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatefulWidget {
@@ -26,42 +28,12 @@ class TextFieldWidget extends StatefulWidget {
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
 }
 
-class _TextFieldWidgetState extends State<TextFieldWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animacaoSize;
+class _TextFieldWidgetState extends State<TextFieldWidget> {
   TextEditingController initial = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-
-    setState(() {
-      initial.text = widget.initialValue;
-    });
-
-    _controller =
-        AnimationController(duration: const Duration(seconds: 1), vsync: this);
-
-    _animacaoSize = Tween<double>(begin: 0, end: 500).animate(
-        CurvedAnimation(parent: _controller, curve: Curves.decelerate));
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(animation: _animacaoSize, builder: _buildAnimation);
-  }
-
-  Widget _buildAnimation(BuildContext context, Widget? child) {
     return Container(
-      width: _animacaoSize.value,
       alignment: Alignment.center,
       margin: const EdgeInsets.symmetric(horizontal: 40),
       child: Padding(

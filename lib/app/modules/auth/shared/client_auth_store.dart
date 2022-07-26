@@ -1,4 +1,3 @@
-import 'package:encrypt/encrypt.dart' as crypto;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:veacos/app/modules/auth/login/login_store.dart';
@@ -7,22 +6,6 @@ import 'package:veacos/app/shared/utils/error_model.dart';
 
 class ClientAuthStore {
   ILocalStorage storage = Modular.get();
-  final key = crypto.Key.fromUtf8('put32charactershereeeeeeeeeeeee!');
-  final iv = crypto.IV.fromUtf8('put16characters!');
-
-  //encrypt
-  String encryptMyData(String text) {
-    final e = crypto.Encrypter(crypto.AES(key, mode: crypto.AESMode.cbc));
-    final encryptedData = e.encrypt(text, iv: iv);
-    return encryptedData.base64;
-  }
-
-  //dycrypt
-  String decryptMyData(String text) {
-    final e = crypto.Encrypter(crypto.AES(key, mode: crypto.AESMode.cbc));
-    final decryptedData = e.decrypt(crypto.Encrypted.fromBase64(text), iv: iv);
-    return decryptedData;
-  }
 
   var loading$ = ValueNotifier(false);
   setLoading(value) => loading$.value = value;
@@ -141,11 +124,11 @@ class ClientAuthStore {
   var error$ = ValueNotifier('');
 
   setMessageError(value) {
-    if (value.response == null) {
-      return 'Erro: ${value.message}';
-    } else {
+    try {
       ErrorModel errorModel = ErrorModel.fromMap(value.response.data);
       return 'Erro: ${errorModel.statusCode}, ${errorModel.message}';
+    } catch (erro) {
+      return 'Erro: ${value.message}';
     }
   }
 }

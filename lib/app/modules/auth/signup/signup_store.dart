@@ -29,13 +29,13 @@ class SignupStore {
         name: client.name$.value,
         password: client.password$.value);
     client.setLoading(true);
-    auth.saveUser(model).then((value) {
+    auth.saveUser(model).then((r) {
       setMsgErrOrGoal(true);
       setMsg('Usuário criado com sucesso');
-      client.setLoading(false);
-
-      auth.getLoginDio(client.email$, client.password$).then((value) async {
-        UserModel user = UserModel.fromJson(value.data);
+      auth
+          .getLoginDio(client.email$.value, client.password$.value)
+          .then((value) async {
+        UserModel user = UserModel.fromMap(value.data);
         SessionManager().set("token", user.jwtToken);
         storage.put('token', [user.jwtToken]);
         await storage.put('user', [jsonEncode(user)]);
@@ -46,7 +46,6 @@ class SignupStore {
     }).catchError((error) {
       setMsgErrOrGoal(false);
       setMsg(client.setMessageError(error));
-      client.setLoading(false);
-    });
+    }).whenComplete(() => client.setLoading(false));
   }
 }

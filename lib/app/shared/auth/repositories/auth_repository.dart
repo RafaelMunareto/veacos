@@ -65,8 +65,8 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  Future loginDio(email$, password$) async {
-    email$ = email$.value.toLowerCase();
+  Future loginDio(email, password) async {
+    email = email.toLowerCase();
     Response response;
     var dio = Dio(
       BaseOptions(
@@ -74,8 +74,8 @@ class AuthRepository implements IAuthRepository {
       ),
     );
 
-    response = await dio.post('users/signin',
-        data: {"email": email$, "password": password$.value});
+    response = await dio
+        .post('users/signin', data: {"email": email, "password": password});
     DioStruture().statusRequest(response);
 
     return response;
@@ -109,7 +109,7 @@ class AuthRepository implements IAuthRepository {
 
   @override
   saveUser(UserClientModel model) async {
-    model.email = model.email.toLowerCase();
+    model.email = model.email.trim().toLowerCase();
     Response response;
     var dio = Dio(
       BaseOptions(

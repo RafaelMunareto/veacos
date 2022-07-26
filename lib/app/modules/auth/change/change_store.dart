@@ -25,14 +25,13 @@ class ChangeStore {
       auth
           .changeUserPassword(client.code$.value, client.confirmPassword$.value)
           .then((value) {
-        client.setLoading(false);
         setMsgErrOrGoal(true);
         setMsg('Senha alterada com sucesso!');
       }).catchError((error) {
         client.setLoading(false);
         setMsgErrOrGoal(false);
         setMsg(client.setMessageError(error));
-      });
+      }).whenComplete(() => client.setLoading(false));
     } else {
       setMsgErrOrGoal(false);
       setMsg('Usuário não encontrado na base');

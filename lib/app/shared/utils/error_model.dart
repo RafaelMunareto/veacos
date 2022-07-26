@@ -3,10 +3,10 @@ import 'dart:convert';
 
 class ErrorModel {
   int? statusCode;
-  String message;
+  dynamic message;
   String error;
 
-  ErrorModel({this.statusCode, this.message = '', this.error = ''});
+  ErrorModel({this.statusCode, this.message, this.error = ''});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -19,7 +19,9 @@ class ErrorModel {
   factory ErrorModel.fromMap(Map<String, dynamic> map) {
     return ErrorModel(
       statusCode: map['statusCode'] != null ? map['statusCode'] as int : null,
-      message: map['message'] as String,
+      message: map['message'] is List
+          ? map['message'][0] as String
+          : map['message'] as String,
       error: map['error'] as String,
     );
   }

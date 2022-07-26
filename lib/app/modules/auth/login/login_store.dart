@@ -29,21 +29,17 @@ class LoginStore {
   submit() async {
     client.setLoading(true);
     await auth
-        .getLoginDio(client.email$, client.password$)
+        .getLoginDio(client.email$.value, client.password$.value)
         .then((value) async {
           setMsgErrOrGoal(false);
           UserModel user = UserModel.fromMap(value.data);
           SessionManager().set("token", user.jwtToken);
           await storage.put('token', [user.jwtToken]);
           await storage.put('user', [jsonEncode(value.data)]);
-          await storage.put('biometric', [
-            client.email$.value,
-            client.encryptMyData(client.password$.value)
-          ]);
-          await storage.put('login-normal', [
-            client.email$.value,
-            client.encryptMyData(client.password$.value)
-          ]);
+          await storage
+              .put('biometric', [client.email$.value, client.password$.value]);
+          await storage.put(
+              'login-normal', [client.email$.value, client.password$.value]);
         })
         .then((value) => Modular.to.navigate('/home/'))
         .catchError((error) {
@@ -57,31 +53,27 @@ class LoginStore {
   loginWithGoogle() async {
     client.setLoading(true);
     try {
-      await auth
-          .loginWithGoogle()
-          .then((value) {
-            auth.getLoginDio(value.email$, value.password$).then((value) async {
-              UserModel user = UserModel.fromMap(value.data);
-              await SessionManager().set("token", user.jwtToken);
-              await storage.put('token', [user.jwtToken]);
-              await storage.put('user', [jsonEncode(value.data)]);
-              await storage.put('login-normal',
-                  [value.email$, client.encryptMyData(value.password$)]);
-              await storage.put('biometric',
-                  [value.email$, client.encryptMyData(value.password$)]);
-              client.setLoading(false);
-            });
-          })
-          .then((value) => Modular.to.navigate('/home/'))
-          .onError((error, stackTrace) {
-            client.setLoading(false);
-            setMsgErrOrGoal(false);
-            setMsg(client.setMessageError(error));
-          });
+      await auth.loginWithGoogle().then((value) {
+        auth
+            .getLoginDio(value.email$.value, value.password$.value)
+            .then((value) async {
+          UserModel user = UserModel.fromMap(value.data);
+          await SessionManager().set("token", user.jwtToken);
+          await storage.put('token', [user.jwtToken]);
+          await storage.put('user', [jsonEncode(value.data)]);
+          await storage.put('login-normal', [value.email$, value.password$]);
+          await storage.put('biometric', [value.email$, value.password$]);
+          Modular.to.navigate('/home/');
+        });
+      }).onError((error, stackTrace) {
+        client.setLoading(false);
+        setMsgErrOrGoal(false);
+        setMsg(client.setMessageError(error));
+      }).whenComplete(() => client.setLoading(false));
     } catch (erro) {
       client.setLoading(false);
       setMsgErrOrGoal(false);
-      setMsg(erro);
+      setMsg(client.setMessageError(erro));
     }
   }
 
@@ -103,28 +95,26 @@ class LoginStore {
     }
   }
 
-  authenticateBiometric() {
-    auth.authenticateWithBiometrics(client.faceOrFinger$.value).then((value) {
+  authenticateBiometric() async {
+    await auth
+        .authenticateWithBiometrics(client.faceOrFinger$.value)
+        .then((value) async {
       if (value == 'Authorized') {
         if (client.loginStorage$.value[0] != '') {
           client.setLoading(true);
-          auth
-              .getLoginDio(client.loginStorage$.value[0],
-                  client.decryptMyData(client.loginStorage$.value[1]))
+          await auth
+              .getLoginDio(
+                  client.loginStorage$.value[0], client.loginStorage$.value[1])
               .then((value) async {
-                client.setLoading(false);
-                setMsgErrOrGoal(false);
-                UserModel user = UserModel.fromMap(value.data);
-                SessionManager().set("token", user.jwtToken);
-                await storage.put('token', [user.jwtToken]);
-                await storage.put('user', [jsonEncode(value.data)]);
-              })
-              .then((value) => Modular.to.navigate('/home/'))
-              .catchError((error) {
-                client.setLoading(false);
-                setMsgErrOrGoal(false);
-                setMsg(client.setMessageError(error));
-              });
+            UserModel user = UserModel.fromMap(value.data);
+            await SessionManager().set("token", user.jwtToken);
+            await storage.put('token', [user.jwtToken]);
+            await storage.put('user', [jsonEncode(value.data)]);
+            Modular.to.navigate('/home/');
+          }).catchError((error) {
+            setMsgErrOrGoal(false);
+            setMsg(client.setMessageError(error));
+          }).whenComplete(() => client.setLoading(false));
         }
       }
     });
@@ -152,7 +142,7 @@ class LoginStore {
       if (value != null) {
         if (value.isNotEmpty) {
           auth
-              .getLoginDio(value[0], client.decryptMyData(value[1]))
+              .getLoginDio(value[0], value[1])
               .then((value) {
                 client.setLoading(false);
                 setMsgErrOrGoal(false);

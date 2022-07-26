@@ -28,6 +28,7 @@ class SignupPageState extends State<SignupPage> {
         );
       }
     }
+    store.setMsg('');
   }
 
   @override

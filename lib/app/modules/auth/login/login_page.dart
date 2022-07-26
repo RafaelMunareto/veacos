@@ -18,8 +18,7 @@ class LoginPageState extends State<LoginPage> {
   final LoginStore store = Modular.get();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  submit() async {
-    await store.submit();
+  message() {
     if (store.msg$.value != '') {
       SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
           message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
@@ -31,6 +30,21 @@ class LoginPageState extends State<LoginPage> {
       }
     }
     store.setMsg('');
+  }
+
+  submit() async {
+    await store.submit();
+    message();
+  }
+
+  submitGoogle() async {
+    await store.loginWithGoogle();
+    message();
+  }
+
+  submitBiometric() async {
+    await store.authenticateBiometric();
+    message();
   }
 
   @override
@@ -131,25 +145,31 @@ class LoginPageState extends State<LoginPage> {
                                       image:
                                           AssetImage('assets/img/google.png'),
                                     ),
-                                    onTap: store.loginWithGoogle,
+                                    onTap: submitGoogle,
                                   ),
                                 ),
                               ),
                               store.client.supportState$.value ==
                                       SupportState.supported
                                   ? GestureDetector(
-                                      onTap: store.authenticateBiometric,
+                                      onTap: submitBiometric,
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 20),
                                         width: 64,
-                                        child: store.client.faceOrFinger$.value
-                                            ? const Image(
-                                                image: AssetImage(
-                                                    'assets/img/face.png'))
-                                            : const Image(
-                                                image: AssetImage(
-                                                    'assets/img/digital.png')),
+                                        child: ValueListenableBuilder(
+                                            valueListenable:
+                                                store.client.faceOrFinger$,
+                                            builder: (context, value, child) {
+                                              return store.client.faceOrFinger$
+                                                      .value
+                                                  ? const Image(
+                                                      image: AssetImage(
+                                                          'assets/img/face.png'))
+                                                  : const Image(
+                                                      image: AssetImage(
+                                                          'assets/img/digital.png'));
+                                            }),
                                       ),
                                     )
                                   : Container(),

@@ -1,92 +1,76 @@
 import 'dart:convert';
 
-import 'package:mobx/mobx.dart';
+import 'package:flutter/foundation.dart';
 import 'package:veacos/app/shared/auth/repositories/auth_repository_interface.dart';
 import 'package:veacos/app/shared/auth/repositories/biometric_repository_interface.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_share.dart';
 
 import 'model/user_client.model.dart';
-part 'auth_controller.g.dart';
 
-class AuthController = _AuthControllerBase with _$AuthController;
-
-abstract class _AuthControllerBase with Store {
+class AuthController {
   final IAuthRepository authRepository;
   final ILocalStorage storage = LocalStorageShare();
   final IBiometricRepository biometricRepository;
 
-  @observable
-  AuthStatus status = AuthStatus.loading;
+  var status$ = ValueNotifier(AuthStatus.loading);
+  setStatus(value) => status$.value = value;
+  var user$ = ValueNotifier(null);
+  setUsers(value) => user$.value = value;
 
-  @observable
-  UserClientModel? user;
-
-  _AuthControllerBase(
+  AuthController(
       {required this.authRepository, required this.biometricRepository});
 
-  @action
   setUser(UserClientModel value) {
     storage.get('user').then((value) {
       if (value != null) {
-        user = UserClientModel.fromJson(jsonDecode(value[0])['user']);
+        setUsers(UserClientModel.fromJson(jsonDecode(value[0])['user']));
       }
     });
-    status = user!.email == '' ? AuthStatus.logoff : AuthStatus.login;
+    setStatus(user$.value?.email == '' ? AuthStatus.logoff : AuthStatus.login);
   }
 
-  @action
   Future loginWithGoogle() {
     return authRepository.getGoogleLogin();
   }
 
-  @action
   logout() {
     return authRepository.getLogout();
   }
 
   //biometric
-  @action
   Future checkBiometrics() {
     return biometricRepository.checkBiometrics();
   }
 
-  @action
   Future getAvailableBiometrics() {
     return biometricRepository.getAvailableBiometrics();
   }
 
-  @action
   Future<String> authenticateWithBiometrics(bool faceOrFinger) {
     return biometricRepository.authenticateWithBiometrics(faceOrFinger);
   }
 
-  @action
   cancelAuthentication() {
     return biometricRepository.cancelAuthentication();
   }
 
-  @action
   Future getLoginDio(email, password) {
     return authRepository.loginDio(email, password);
   }
 
-  @action
   saveUser(UserClientModel model) {
     return authRepository.saveUser(model);
   }
 
-  @action
   Future perfilUser(UserClientModel user) {
     return authRepository.perfilUser(user);
   }
 
-  @action
   Future sendEmailChangePassword(String email) {
     return authRepository.sendEmailChangePassword(email);
   }
 
-  @action
   Future changeUserPassword(String id, String password) {
     return authRepository.changeUserPassword(id, password);
   }

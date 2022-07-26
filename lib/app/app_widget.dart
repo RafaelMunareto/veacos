@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_share.dart';
@@ -76,17 +75,6 @@ class _AppWidgetState extends State<AppWidget> {
       themeMode: _themeMode,
       routeInformationParser: Modular.routeInformationParser,
       routerDelegate: Modular.routerDelegate,
-      builder: (context, widget) => ResponsiveWrapper.builder(
-        ClampingScrollWrapper.builder(context, widget!),
-        defaultScale: true,
-        minWidth: 450,
-        defaultName: DESKTOP,
-        breakpoints: const [
-          ResponsiveBreakpoint.resize(450, name: MOBILE),
-          ResponsiveBreakpoint.resize(700, name: TABLET),
-          ResponsiveBreakpoint.resize(800, name: DESKTOP),
-        ],
-      ),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

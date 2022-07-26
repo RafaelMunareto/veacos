@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:veacos/app/shared/utils/themes/constants.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 ThemeData lightThemeData(BuildContext context) {
   return ThemeData.light().copyWith(
@@ -26,8 +25,6 @@ ThemeData lightThemeData(BuildContext context) {
       ),
     ),
     iconTheme: IconThemeData(color: klightGrey),
-    textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)
-        .apply(bodyColor: kContentColorLightTheme),
     colorScheme: const ColorScheme.light(
       primary: kPrimaryColor,
       secondary: kSecondaryColor,
@@ -66,8 +63,6 @@ ThemeData darkThemeData(BuildContext context) {
       ),
     ),
     iconTheme: const IconThemeData(color: kblue),
-    textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)
-        .apply(bodyColor: darkWhite),
     colorScheme: ColorScheme.light(
       primary: darkPrimaryColor,
       secondary: klightGrey,

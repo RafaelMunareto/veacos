@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/auth/change/change_store.dart';
 import 'package:veacos/app/shared/components/button_widget.dart';
 import 'package:veacos/app/shared/components/link_rote_widget.dart';
@@ -34,22 +32,17 @@ class ChangePageState extends State<ChangePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    autorun(
-      (_) {
-        if (store.client.msg != '') {
-          FocusScope.of(context).requestFocus(FocusNode());
-          SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
-              message: store.client.msg,
-              errOrGoal: store.client.msgErrOrGoal,
-              rota: '/auth/');
-          store.client.setMsg('');
-          if (store.client.msgErrOrGoal) {
-            Timer(const Duration(seconds: 2),
-                () => store.client.cleanVariables());
-          }
-        }
-      },
-    );
+    if (store.client.msg$.value != '') {
+      FocusScope.of(context).requestFocus(FocusNode());
+      SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
+          message: store.client.msg$,
+          errOrGoal: store.client.msgErrOrGoal$,
+          rota: '/auth/');
+      store.client.setMsg('');
+      if (store.client.msgErrOrGoal$.value) {
+        Timer(const Duration(seconds: 2), () => store.client.cleanVariables());
+      }
+    }
   }
 
   @override
@@ -85,33 +78,38 @@ class ChangePageState extends State<ChangePage> {
                   functionBool: false,
                   errorText: store.client.validatePassword),
             ),
-            Observer(builder: (_) {
-              return SizedBox(
-                child: TextFieldWidget(
-                    labelText: 'Confirmação de senha',
-                    obscure: true,
-                    onChanged: store.client.setConfirmPassword,
-                    functionBool: store.client.isValidChangePassword,
-                    function: store.submit,
-                    errorText: store.client.validateConfirmPassword),
-              );
-            }),
+            ValueListenableBuilder(
+                valueListenable: store.client.password$,
+                builder: (context, value, child) {
+                  return SizedBox(
+                    child: TextFieldWidget(
+                        labelText: 'Confirmação de senha',
+                        obscure: true,
+                        onChanged: store.client.setConfirmPassword,
+                        functionBool: store.client.isValidChangePassword,
+                        function: store.submit,
+                        errorText: store.client.validateConfirmPassword),
+                  );
+                }),
             SizedBox(height: size.height * 0.05),
-            Observer(builder: (_) {
-              return Container(
-                alignment: Alignment.centerRight,
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                child: ButtonWidget(
-                  label: 'ALTERAR',
-                  theme: store.client.theme,
-                  width: size.width * 0.5,
-                  loading: store.client.loading,
-                  function:
-                      store.client.isValidChangePassword ? store.submit : null,
-                ),
-              );
-            }),
+            ValueListenableBuilder(
+                valueListenable: store.client.password$,
+                builder: (context, value, child) {
+                  return Container(
+                    alignment: Alignment.centerRight,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 10),
+                    child: ButtonWidget(
+                      label: 'ALTERAR',
+                      theme: store.client.theme$.value,
+                      width: size.width * 0.5,
+                      loading: store.client.loading$.value,
+                      function: store.client.isValidChangePassword
+                          ? store.submit
+                          : null,
+                    ),
+                  );
+                }),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 58),
               child: const LinkRoteWidget(labelBold: 'Login', rota: '/auth/'),

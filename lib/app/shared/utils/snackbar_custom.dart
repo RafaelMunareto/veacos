@@ -11,7 +11,7 @@ class SnackbarCustom {
 
   createSnackBareErrOrGoal(scaffoldKey,
       {message = '', errOrGoal = false, time = 2, rota}) {
-    if (message != '') {
+    if (message != '' && scaffoldKey.currentState != null) {
       if (errOrGoal) {
         final snackbar = SnackBar(
             content: Text(message),

@@ -1,14 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/auth/signup/signup_store.dart';
 import 'package:veacos/app/shared/components/button_widget.dart';
 import 'package:veacos/app/shared/components/link_rote_widget.dart';
 import 'package:veacos/app/shared/components/text_field_widget.dart';
-import 'package:veacos/app/shared/utils/snackbar_custom.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -19,26 +14,6 @@ class SignupPage extends StatefulWidget {
 class SignupPageState extends State<SignupPage> {
   final SignupStore store = Modular.get();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    autorun(
-      (_) {
-        if (store.client.msg != '') {
-          SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
-              errOrGoal: store.client.msgErrOrGoal,
-              message: store.client.msg,
-              rota: '/auth/');
-          if (store.client.msgErrOrGoal) {
-            Timer(const Duration(seconds: 2),
-                () => store.client.cleanVariables());
-          }
-          store.client.setMsg('');
-        }
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,32 +59,36 @@ class SignupPageState extends State<SignupPage> {
                     onChanged: store.client.setPassword,
                     errorText: store.client.validatePassword),
               ),
-              Observer(builder: (_) {
-                return SizedBox(
-                  child: TextFieldWidget(
-                      labelText: 'Confirmação de senha',
-                      obscure: true,
-                      onChanged: store.client.setConfirmPassword,
-                      functionBool: store.client.isValidSignup,
-                      function: store.submit,
-                      errorText: store.client.validateConfirmPassword),
-                );
-              }),
+              ValueListenableBuilder(
+                  valueListenable: store.client.password$,
+                  builder: (context, value, child) {
+                    return SizedBox(
+                      child: TextFieldWidget(
+                          labelText: 'Confirmação de senha',
+                          obscure: true,
+                          onChanged: store.client.setConfirmPassword,
+                          functionBool: store.client.isValidSignup,
+                          function: store.submit,
+                          errorText: store.client.validateConfirmPassword),
+                    );
+                  }),
               SizedBox(height: size.height * 0.05),
-              Observer(builder: (_) {
-                return Container(
-                  alignment: Alignment.centerRight,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                  child: ButtonWidget(
-                      label: 'CADASTRAR',
-                      theme: store.client.theme,
-                      width: size.width * 0.5,
-                      loading: store.client.loading,
-                      function:
-                          store.client.isValidSignup ? store.submit : null),
-                );
-              }),
+              ValueListenableBuilder(
+                  valueListenable: store.client.loading$,
+                  builder: (context, value, child) {
+                    return Container(
+                      alignment: Alignment.centerRight,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 10),
+                      child: ButtonWidget(
+                          label: 'CADASTRAR',
+                          theme: store.client.theme$.value,
+                          width: size.width * 0.5,
+                          loading: store.client.loading$.value,
+                          function:
+                              store.client.isValidSignup ? store.submit : null),
+                    );
+                  }),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 58),
                 child: const LinkRoteWidget(

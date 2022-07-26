@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/auth/login/login_store.dart';
 import 'package:veacos/app/shared/components/button_widget.dart';
 import 'package:veacos/app/shared/components/link_rote_widget.dart';
@@ -18,26 +16,21 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   final LoginStore store = Modular.get();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldLogin = GlobalKey<ScaffoldState>();
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    autorun(
-      (_) {
-        if (store.client.msg != '') {
-          SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
-              message: store.client.msg, errOrGoal: store.client.msgErrOrGoal);
-          if (store.client.msgErrOrGoal) {
-            Timer(
-              const Duration(seconds: 2),
-              () => store.client.cleanVariables(),
-            );
-          }
-          store.client.setMsg('');
-        }
-      },
-    );
+  submit() async {
+    await store.submit();
+    if (store.client.msg$.value != '') {
+      SnackbarCustom().createSnackBareErrOrGoal(scaffoldLogin,
+          message: store.client.msg$.value,
+          errOrGoal: store.client.msgErrOrGoal$.value);
+      if (store.client.msgErrOrGoal$.value) {
+        Future.delayed(
+          const Duration(seconds: 2),
+          () => store.client.cleanVariables(),
+        );
+      }
+    }
   }
 
   @override
@@ -47,7 +40,7 @@ class LoginPageState extends State<LoginPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-        key: _scaffoldKey,
+        key: scaffoldLogin,
         body: LayoutBuilder(builder: (context, constraint) {
           return SingleChildScrollView(
             child: SizedBox(
@@ -69,22 +62,28 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   SizedBox(height: size.height * 0.03),
-                  SizedBox(
-                      child: TextFieldWidget(
-                          labelText: 'E-mail',
-                          onChanged: store.client.setEmail,
-                          errorText: store.client.validateEmail)),
-                  Observer(builder: (_) {
-                    return SizedBox(
-                      child: TextFieldWidget(
-                          labelText: 'Senha',
-                          obscure: true,
-                          onChanged: store.client.setPassword,
-                          functionBool: store.client.isValidLogin,
-                          function: store.submit,
-                          errorText: store.client.validatePassword),
-                    );
-                  }),
+                  ValueListenableBuilder(
+                      valueListenable: store.client.email$,
+                      builder: (context, value, child) {
+                        return SizedBox(
+                            child: TextFieldWidget(
+                                labelText: 'E-mail',
+                                onChanged: store.client.setEmail,
+                                errorText: store.client.validateEmail));
+                      }),
+                  ValueListenableBuilder(
+                      valueListenable: store.client.password$,
+                      builder: (context, value, child) {
+                        return SizedBox(
+                          child: TextFieldWidget(
+                              labelText: 'Senha',
+                              obscure: true,
+                              onChanged: store.client.setPassword,
+                              functionBool: store.client.isValidLogin,
+                              function: store.submit,
+                              errorText: store.client.validatePassword),
+                        );
+                      }),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 32),
                     child: const LinkRoteWidget(
@@ -92,65 +91,72 @@ class LoginPageState extends State<LoginPage> {
                         rota: '/auth/forget/'),
                   ),
                   SizedBox(height: size.height * 0.05),
-                  Observer(builder: (_) {
-                    return Container(
-                      alignment: Alignment.centerRight,
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 10),
-                      child: ButtonWidget(
-                          label: 'LOGIN',
-                          theme: store.client.theme,
-                          width: size.width * 0.5,
-                          loading: store.client.loading,
-                          function:
-                              store.client.isValidLogin ? store.submit : null),
-                    );
-                  }),
+                  ValueListenableBuilder(
+                      valueListenable: store.client.password$,
+                      builder: (context, value, child) {
+                        return Container(
+                          alignment: Alignment.centerRight,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 10),
+                          child: ButtonWidget(
+                              label: 'LOGIN',
+                              theme: store.client.theme$.value,
+                              width: size.width * 0.5,
+                              loading: store.client.loading$.value,
+                              function:
+                                  store.client.isValidLogin ? submit : null),
+                        );
+                      }),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 58),
                     child: const LinkRoteWidget(
                         labelBold: 'Não tem cadastro? Registre-se',
                         rota: '/auth/signup/'),
                   ),
-                  Observer(builder: (_) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 32, right: 32),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 40),
-                            child: MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              child: GestureDetector(
-                                child: const Image(
-                                  image: AssetImage('assets/img/google.png'),
-                                ),
-                                onTap: store.loginWithGoogle,
-                              ),
-                            ),
-                          ),
-                          store.client.supportState == SupportState.supported
-                              ? GestureDetector(
-                                  onTap: store.authenticateBiometric,
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    width: 64,
-                                    child: store.client.faceOrFinger
-                                        ? const Image(
-                                            image: AssetImage(
-                                                'assets/img/face.png'))
-                                        : const Image(
-                                            image: AssetImage(
-                                                'assets/img/digital.png')),
+                  ValueListenableBuilder(
+                      valueListenable: store.client.supportState$,
+                      builder: (context, value, child) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 32, right: 32),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 40),
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    child: const Image(
+                                      image:
+                                          AssetImage('assets/img/google.png'),
+                                    ),
+                                    onTap: store.loginWithGoogle,
                                   ),
-                                )
-                              : Container(),
-                        ],
-                      ),
-                    );
-                  }),
+                                ),
+                              ),
+                              store.client.supportState$.value ==
+                                      SupportState.supported
+                                  ? GestureDetector(
+                                      onTap: store.authenticateBiometric,
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        width: 64,
+                                        child: store.client.faceOrFinger$.value
+                                            ? const Image(
+                                                image: AssetImage(
+                                                    'assets/img/face.png'))
+                                            : const Image(
+                                                image: AssetImage(
+                                                    'assets/img/digital.png')),
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
+                          ),
+                        );
+                      }),
                 ],
               ),
             ),

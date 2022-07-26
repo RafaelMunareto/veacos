@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 
 class TextFieldWidget extends StatefulWidget {
   final String labelText;
@@ -61,32 +60,30 @@ class _TextFieldWidgetState extends State<TextFieldWidget>
   }
 
   Widget _buildAnimation(BuildContext context, Widget? child) {
-    return Observer(builder: (_) {
-      return Container(
-        width: _animacaoSize.value,
-        alignment: Alignment.center,
-        margin: const EdgeInsets.symmetric(horizontal: 40),
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: TextField(
-            key: Key(widget.labelText),
-            onChanged: widget.onChanged,
-            onEditingComplete: () {
-              if (widget.functionBool) {
-                widget.function();
-              }
-            },
-            controller: initial,
-            obscureText: widget.obscure,
-            decoration: InputDecoration(
-              errorStyle: const TextStyle(color: Colors.redAccent),
-              border: !widget.outline ? null : const OutlineInputBorder(),
-              labelText: widget.labelText,
-              errorText: widget.errorText == null ? null : widget.errorText(),
-            ),
+    return Container(
+      width: _animacaoSize.value,
+      alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: TextField(
+          key: Key(widget.labelText),
+          onChanged: widget.onChanged,
+          onEditingComplete: () {
+            if (widget.functionBool) {
+              widget.function();
+            }
+          },
+          controller: initial,
+          obscureText: widget.obscure,
+          decoration: InputDecoration(
+            errorStyle: const TextStyle(color: Colors.redAccent),
+            border: !widget.outline ? null : const OutlineInputBorder(),
+            labelText: widget.labelText,
+            errorText: widget.errorText == null ? null : widget.errorText(),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }

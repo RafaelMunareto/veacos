@@ -1,27 +1,22 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/auth/shared/client_auth_store.dart';
 import 'package:veacos/app/shared/auth/auth_controller.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 
-part 'change_store.g.dart';
-
-class ChangeStore = _ChangeStoreBase with _$ChangeStore;
-
-abstract class _ChangeStoreBase with Store {
+class ChangeStore {
   AuthController auth = Modular.get();
   ClientAuthStore client = Modular.get();
   ILocalStorage storage = Modular.get();
 
-  _ChangeStoreBase() {
+  ChangeStore() {
     client.buscaTheme();
   }
 
   submit() {
-    if (client.code != '') {
+    if (client.code$.value != '') {
       client.setLoading(true);
       auth
-          .changeUserPassword(client.code, client.confirmPassword)
+          .changeUserPassword(client.code$.value, client.confirmPassword$.value)
           .then((value) {
         client.setLoading(false);
         client.setMsgErrOrGoal(true);

@@ -3,31 +3,28 @@ import 'dart:convert';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/auth/shared/client_auth_store.dart';
 import 'package:veacos/app/shared/auth/auth_controller.dart';
 import 'package:veacos/app/shared/auth/model/user_model.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 
-part 'login_store.g.dart';
-
-class LoginStore = _LoginStoreBase with _$LoginStore;
-
-abstract class _LoginStoreBase with Store {
+class LoginStore {
   ClientAuthStore client = Modular.get();
   ILocalStorage storage = Modular.get();
   AuthController auth = Modular.get();
   final LocalAuthentication bio = Modular.get();
 
-  _LoginStoreBase() {
+  LoginStore() {
     client.buscaTheme();
     checkSupportDevice();
   }
 
   submit() async {
     await client.setLoading(true);
+    await client.setMsg('');
+    await client.setMsgErrOrGoal(false);
     await auth
-        .getLoginDio(client.email, client.password)
+        .getLoginDio(client.email$, client.password$)
         .then((value) async {
           client.setLoading(false);
           client.setMsgErrOrGoal(false);
@@ -35,10 +32,14 @@ abstract class _LoginStoreBase with Store {
           SessionManager().set("token", user.jwtToken);
           await storage.put('token', [user.jwtToken]);
           await storage.put('user', [jsonEncode(value.data)]);
-          await storage.put('biometric',
-              [client.email, client.encryptMyData(client.password)]);
-          await storage.put('login-normal',
-              [client.email, client.encryptMyData(client.password)]);
+          await storage.put('biometric', [
+            client.email$.value,
+            client.encryptMyData(client.password$.value)
+          ]);
+          await storage.put('login-normal', [
+            client.email$.value,
+            client.encryptMyData(client.password$.value)
+          ]);
         })
         .then((value) => Modular.to.navigate('/home/'))
         .catchError((error) {
@@ -54,15 +55,15 @@ abstract class _LoginStoreBase with Store {
       await auth
           .loginWithGoogle()
           .then((value) {
-            auth.getLoginDio(value.email, value.password).then((value) async {
+            auth.getLoginDio(value.email$, value.password$).then((value) async {
               UserModel user = UserModel.fromJson(value.data);
               await SessionManager().set("token", user.jwtToken);
               await storage.put('token', [user.jwtToken]);
               await storage.put('user', [jsonEncode(value.data)]);
               await storage.put('login-normal',
-                  [value.email, client.encryptMyData(value.password)]);
+                  [value.email$, client.encryptMyData(value.password$)]);
               await storage.put('biometric',
-                  [value.email, client.encryptMyData(value.password)]);
+                  [value.email$, client.encryptMyData(value.password$)]);
               client.setLoading(false);
             });
           })
@@ -82,28 +83,29 @@ abstract class _LoginStoreBase with Store {
   checkBiometrics() {
     auth.biometricRepository
         .checkBiometrics()
-        .then((value) => client.canCheckBiometrics = value);
+        .then((value) => client.canCheckBiometrics$.value = value);
   }
 
   getAvailableBiometrics() async {
     await auth.biometricRepository
         .getAvailableBiometrics()
-        .then((value) => client.availableBiometrics = value);
-    if (client.availableBiometrics.contains(BiometricType.face)) {
-      client.faceOrFinger = true;
-    } else if (client.availableBiometrics.contains(BiometricType.fingerprint)) {
-      client.faceOrFinger = false;
+        .then((value) => client.availableBiometrics$.value = value);
+    if (client.availableBiometrics$.value.contains(BiometricType.face)) {
+      client.faceOrFinger$.value = true;
+    } else if (client.availableBiometrics$.value
+        .contains(BiometricType.fingerprint)) {
+      client.faceOrFinger$.value = false;
     }
   }
 
   authenticateBiometric() {
-    auth.authenticateWithBiometrics(client.faceOrFinger).then((value) {
+    auth.authenticateWithBiometrics(client.faceOrFinger$.value).then((value) {
       if (value == 'Authorized') {
-        if (client.loginStorage![0] != '') {
+        if (client.loginStorage$.value[0] != '') {
           client.setLoading(true);
           auth
-              .getLoginDio(client.loginStorage![0],
-                  client.decryptMyData(client.loginStorage![1]))
+              .getLoginDio(client.loginStorage$.value[0],
+                  client.decryptMyData(client.loginStorage$.value[1]))
               .then((value) async {
                 client.setLoading(false);
                 client.setMsgErrOrGoal(false);
@@ -123,21 +125,19 @@ abstract class _LoginStoreBase with Store {
     });
   }
 
-  @action
   getStorageLogin() async {
     await storage.get('biometric').then((value) {
       if (value != null) {
-        client.loginStorage = value;
+        client.loginStorage$.value = value;
       }
     });
   }
 
   checkSupportDevice() async {
     await getStorageLogin();
-    await bio.isDeviceSupported().then((isSupported) => client.supportState =
-        isSupported && client.loginStorage != null
-            ? SupportState.supported
-            : SupportState.unsupported);
+    await bio.isDeviceSupported().then((isSupported) =>
+        client.supportState$.value =
+            isSupported ? SupportState.supported : SupportState.unsupported);
     await checkBiometrics();
     await getAvailableBiometrics();
   }

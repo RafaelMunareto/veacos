@@ -29,18 +29,16 @@ class ChangePageState extends State<ChangePage> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (store.client.msg$.value != '') {
-      FocusScope.of(context).requestFocus(FocusNode());
+  submit() async {
+    await store.submit();
+    if (store.msg$.value != '') {
       SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
-          message: store.client.msg$,
-          errOrGoal: store.client.msgErrOrGoal$,
-          rota: '/auth/');
-      store.client.setMsg('');
-      if (store.client.msgErrOrGoal$.value) {
-        Timer(const Duration(seconds: 2), () => store.client.cleanVariables());
+          message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
+      if (store.msgErrOrGoal$.value) {
+        Future.delayed(
+          const Duration(seconds: 2),
+          () => store.client.cleanVariables(),
+        );
       }
     }
   }
@@ -70,16 +68,20 @@ class ChangePageState extends State<ChangePage> {
               ),
             ),
             SizedBox(height: size.height * 0.03),
-            SizedBox(
-              child: TextFieldWidget(
-                  labelText: 'Senha',
-                  obscure: true,
-                  onChanged: store.client.setPassword,
-                  functionBool: false,
-                  errorText: store.client.validatePassword),
-            ),
             ValueListenableBuilder(
-                valueListenable: store.client.password$,
+                valueListenable: store.client.confirmPassword$,
+                builder: (context, value, child) {
+                  return SizedBox(
+                    child: TextFieldWidget(
+                        labelText: 'Senha',
+                        obscure: true,
+                        onChanged: store.client.setPassword,
+                        functionBool: false,
+                        errorText: store.client.validatePassword),
+                  );
+                }),
+            ValueListenableBuilder(
+                valueListenable: store.client.confirmPassword$,
                 builder: (context, value, child) {
                   return SizedBox(
                     child: TextFieldWidget(
@@ -104,9 +106,8 @@ class ChangePageState extends State<ChangePage> {
                       theme: store.client.theme$.value,
                       width: size.width * 0.5,
                       loading: store.client.loading$.value,
-                      function: store.client.isValidChangePassword
-                          ? store.submit
-                          : null,
+                      function:
+                          store.client.isValidChangePassword ? submit : null,
                     ),
                   );
                 }),

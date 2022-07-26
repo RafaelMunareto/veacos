@@ -4,6 +4,7 @@ import 'package:veacos/app/modules/auth/signup/signup_store.dart';
 import 'package:veacos/app/shared/components/button_widget.dart';
 import 'package:veacos/app/shared/components/link_rote_widget.dart';
 import 'package:veacos/app/shared/components/text_field_widget.dart';
+import 'package:veacos/app/shared/utils/snackbar_custom.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -14,6 +15,20 @@ class SignupPage extends StatefulWidget {
 class SignupPageState extends State<SignupPage> {
   final SignupStore store = Modular.get();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  submit() async {
+    await store.submit();
+    if (store.msg$.value != '') {
+      SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
+          message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
+      if (store.msgErrOrGoal$.value) {
+        Future.delayed(
+          const Duration(seconds: 2),
+          () => store.client.cleanVariables(),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,25 +57,37 @@ class SignupPageState extends State<SignupPage> {
                 ),
               ),
               SizedBox(height: size.height * 0.03),
-              SizedBox(
-                  child: TextFieldWidget(
-                      labelText: 'Nome',
-                      onChanged: store.client.setName,
-                      errorText: store.client.validateName)),
-              SizedBox(
-                  child: TextFieldWidget(
-                      labelText: 'E-mail',
-                      onChanged: store.client.setEmail,
-                      errorText: store.client.validateEmail)),
-              SizedBox(
-                child: TextFieldWidget(
-                    labelText: 'Senha',
-                    obscure: true,
-                    onChanged: store.client.setPassword,
-                    errorText: store.client.validatePassword),
-              ),
+              ValueListenableBuilder(
+                  valueListenable: store.client.name$,
+                  builder: (context, value, child) {
+                    return SizedBox(
+                        child: TextFieldWidget(
+                            labelText: 'Nome',
+                            onChanged: store.client.setName,
+                            errorText: store.client.validateName));
+                  }),
+              ValueListenableBuilder(
+                  valueListenable: store.client.email$,
+                  builder: (context, value, child) {
+                    return SizedBox(
+                        child: TextFieldWidget(
+                            labelText: 'E-mail',
+                            onChanged: store.client.setEmail,
+                            errorText: store.client.validateEmail));
+                  }),
               ValueListenableBuilder(
                   valueListenable: store.client.password$,
+                  builder: (context, value, child) {
+                    return SizedBox(
+                      child: TextFieldWidget(
+                          labelText: 'Senha',
+                          obscure: true,
+                          onChanged: store.client.setPassword,
+                          errorText: store.client.validatePassword),
+                    );
+                  }),
+              ValueListenableBuilder(
+                  valueListenable: store.client.confirmPassword$,
                   builder: (context, value, child) {
                     return SizedBox(
                       child: TextFieldWidget(
@@ -68,7 +95,7 @@ class SignupPageState extends State<SignupPage> {
                           obscure: true,
                           onChanged: store.client.setConfirmPassword,
                           functionBool: store.client.isValidSignup,
-                          function: store.submit,
+                          function: submit,
                           errorText: store.client.validateConfirmPassword),
                     );
                   }),
@@ -85,8 +112,7 @@ class SignupPageState extends State<SignupPage> {
                           theme: store.client.theme$.value,
                           width: size.width * 0.5,
                           loading: store.client.loading$.value,
-                          function:
-                              store.client.isValidSignup ? store.submit : null),
+                          function: store.client.isValidSignup ? submit : null),
                     );
                   }),
               Container(

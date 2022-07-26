@@ -59,27 +59,14 @@ class ClientAuthStore {
     setName('');
     setEmail('');
     setPassword('');
-    setMsg('');
     setCode('');
   }
 
   var checkError$ = ValueNotifier(false);
 
-  var msg$ = ValueNotifier('');
-  setMsg(value) => msg$.value = value;
-
-  var msgForget$ = ValueNotifier('');
-  setMsgForget(value) => msgForget$.value = value;
-
   bool get isValidLogin {
     return validateEmail() == null && validatePassword() == null;
   }
-
-  var msgErrOrGoal$ = ValueNotifier(false);
-  setMsgErrOrGoal(value) => msgErrOrGoal$.value = value;
-
-  var msgErrOrGoalForget$ = ValueNotifier(false);
-  setMsgErrOrGoalForget(value) => msgErrOrGoalForget$.value = value;
 
   var supportState$ = ValueNotifier(SupportState.unknown);
 
@@ -141,7 +128,7 @@ class ClientAuthStore {
   }
 
   String? validateConfirmPassword() {
-    if (password$ != confirmPassword$) {
+    if (password$.value != confirmPassword$.value) {
       return 'As senhas devem ser iguais.';
     } else if (confirmPassword$.value.isEmpty) {
       return 'Campo obrigatório';

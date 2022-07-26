@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:local_auth/local_auth.dart';
@@ -19,15 +20,21 @@ class LoginStore {
     checkSupportDevice();
   }
 
+  var msg$ = ValueNotifier('');
+  setMsg(value) => msg$.value = value;
+
+  var msgErrOrGoal$ = ValueNotifier(false);
+  setMsgErrOrGoal(value) => msgErrOrGoal$.value = value;
+
   submit() async {
     await client.setLoading(true);
-    await client.setMsg('');
-    await client.setMsgErrOrGoal(false);
+    await setMsg('');
+    await setMsgErrOrGoal(false);
     await auth
         .getLoginDio(client.email$, client.password$)
         .then((value) async {
           client.setLoading(false);
-          client.setMsgErrOrGoal(false);
+          setMsgErrOrGoal(false);
           UserModel user = UserModel.fromJson(value.data);
           SessionManager().set("token", user.jwtToken);
           await storage.put('token', [user.jwtToken]);
@@ -44,8 +51,8 @@ class LoginStore {
         .then((value) => Modular.to.navigate('/home/'))
         .catchError((error) {
           client.setLoading(false);
-          client.setMsgErrOrGoal(false);
-          client.setMsg(client.setMessageError(error));
+          setMsgErrOrGoal(false);
+          setMsg(client.setMessageError(error));
         });
   }
 
@@ -70,13 +77,13 @@ class LoginStore {
           .then((value) => Modular.to.navigate('/home/'))
           .onError((error, stackTrace) {
             client.setLoading(false);
-            client.setMsgErrOrGoal(false);
-            client.setMsg(client.setMessageError(error));
+            setMsgErrOrGoal(false);
+            setMsg(client.setMessageError(error));
           });
     } catch (erro) {
       client.setLoading(false);
-      client.setMsgErrOrGoal(false);
-      client.setMsg(erro);
+      setMsgErrOrGoal(false);
+      setMsg(erro);
     }
   }
 
@@ -108,7 +115,7 @@ class LoginStore {
                   client.decryptMyData(client.loginStorage$.value[1]))
               .then((value) async {
                 client.setLoading(false);
-                client.setMsgErrOrGoal(false);
+                setMsgErrOrGoal(false);
                 UserModel user = UserModel.fromJson(value.data);
                 SessionManager().set("token", user.jwtToken);
                 await storage.put('token', [user.jwtToken]);
@@ -117,8 +124,8 @@ class LoginStore {
               .then((value) => Modular.to.navigate('/home/'))
               .catchError((error) {
                 client.setLoading(false);
-                client.setMsgErrOrGoal(false);
-                client.setMsg(client.setMessageError(error));
+                setMsgErrOrGoal(false);
+                setMsg(client.setMessageError(error));
               });
         }
       }
@@ -150,13 +157,13 @@ class LoginStore {
               .getLoginDio(value[0], client.decryptMyData(value[1]))
               .then((value) {
                 client.setLoading(false);
-                client.setMsgErrOrGoal(false);
+                setMsgErrOrGoal(false);
               })
               .then((value) => Modular.to.navigate('/home/'))
               .catchError((error) {
                 client.setLoading(false);
-                client.setMsgErrOrGoal(false);
-                client.setMsg(client.setMessageError(error));
+                setMsgErrOrGoal(false);
+                setMsg(client.setMessageError(error));
               });
         }
       }

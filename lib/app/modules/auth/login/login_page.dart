@@ -16,15 +16,14 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   final LoginStore store = Modular.get();
-  final GlobalKey<ScaffoldState> scaffoldLogin = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   submit() async {
     await store.submit();
-    if (store.client.msg$.value != '') {
-      SnackbarCustom().createSnackBareErrOrGoal(scaffoldLogin,
-          message: store.client.msg$.value,
-          errOrGoal: store.client.msgErrOrGoal$.value);
-      if (store.client.msgErrOrGoal$.value) {
+    if (store.msg$.value != '') {
+      SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
+          message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
+      if (store.msgErrOrGoal$.value) {
         Future.delayed(
           const Duration(seconds: 2),
           () => store.client.cleanVariables(),
@@ -40,7 +39,7 @@ class LoginPageState extends State<LoginPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-        key: scaffoldLogin,
+        key: _scaffoldKey,
         body: LayoutBuilder(builder: (context, constraint) {
           return SingleChildScrollView(
             child: SizedBox(
@@ -80,7 +79,7 @@ class LoginPageState extends State<LoginPage> {
                               obscure: true,
                               onChanged: store.client.setPassword,
                               functionBool: store.client.isValidLogin,
-                              function: store.submit,
+                              function: submit,
                               errorText: store.client.validatePassword),
                         );
                       }),

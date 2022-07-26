@@ -17,21 +17,22 @@ class ForgetPage extends StatefulWidget {
 
 class ForgetPageState extends State<ForgetPage> {
   final ForgetStore store = Modular.get();
-  final GlobalKey<ScaffoldState> scaffoldForget = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   submit() async {
     await store.submit();
-    if (store.client.msgForget$.value != '') {
-      SnackbarCustom().createSnackBareErrOrGoal(scaffoldForget,
-          message: store.client.msgForget$.value,
-          errOrGoal: store.client.msgErrOrGoalForget$.value);
-      if (store.client.msgErrOrGoalForget$.value) {
-        Future.delayed(
-          const Duration(seconds: 2),
-          () => store.client.cleanVariables(),
-        );
+    store.msg$.addListener(() {
+      if (store.msg$.value != '') {
+        SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
+            message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
+        if (store.msgErrOrGoal$.value) {
+          Future.delayed(
+            const Duration(seconds: 2),
+            () => store.client.cleanVariables(),
+          );
+        }
       }
-    }
+    });
   }
 
   @override
@@ -39,7 +40,7 @@ class ForgetPageState extends State<ForgetPage> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      key: scaffoldForget,
+      key: _scaffoldKey,
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: LayoutBuilder(builder: (context, constraint) {

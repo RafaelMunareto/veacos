@@ -144,7 +144,7 @@ class ClientAuthStore {
     if (value.response == null) {
       return 'Erro: ${value.message}';
     } else {
-      ErrorModel errorModel = ErrorModel.fromJson(value.response.data);
+      ErrorModel errorModel = ErrorModel.fromMap(value.response.data);
       return 'Erro: ${errorModel.statusCode}, ${errorModel.message}';
     }
   }

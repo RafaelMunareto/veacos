@@ -27,15 +27,12 @@ class LoginStore {
   setMsgErrOrGoal(value) => msgErrOrGoal$.value = value;
 
   submit() async {
-    await client.setLoading(true);
-    await setMsg('');
-    await setMsgErrOrGoal(false);
+    client.setLoading(true);
     await auth
         .getLoginDio(client.email$, client.password$)
         .then((value) async {
-          client.setLoading(false);
           setMsgErrOrGoal(false);
-          UserModel user = UserModel.fromJson(value.data);
+          UserModel user = UserModel.fromMap(value.data);
           SessionManager().set("token", user.jwtToken);
           await storage.put('token', [user.jwtToken]);
           await storage.put('user', [jsonEncode(value.data)]);
@@ -53,7 +50,8 @@ class LoginStore {
           client.setLoading(false);
           setMsgErrOrGoal(false);
           setMsg(client.setMessageError(error));
-        });
+        })
+        .whenComplete(() => client.setLoading(false));
   }
 
   loginWithGoogle() async {
@@ -63,7 +61,7 @@ class LoginStore {
           .loginWithGoogle()
           .then((value) {
             auth.getLoginDio(value.email$, value.password$).then((value) async {
-              UserModel user = UserModel.fromJson(value.data);
+              UserModel user = UserModel.fromMap(value.data);
               await SessionManager().set("token", user.jwtToken);
               await storage.put('token', [user.jwtToken]);
               await storage.put('user', [jsonEncode(value.data)]);
@@ -116,7 +114,7 @@ class LoginStore {
               .then((value) async {
                 client.setLoading(false);
                 setMsgErrOrGoal(false);
-                UserModel user = UserModel.fromJson(value.data);
+                UserModel user = UserModel.fromMap(value.data);
                 SessionManager().set("token", user.jwtToken);
                 await storage.put('token', [user.jwtToken]);
                 await storage.put('user', [jsonEncode(value.data)]);

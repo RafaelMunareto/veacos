@@ -30,6 +30,7 @@ class LoginPageState extends State<LoginPage> {
         );
       }
     }
+    store.setMsg('');
   }
 
   @override
@@ -91,7 +92,7 @@ class LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: size.height * 0.05),
                   ValueListenableBuilder(
-                      valueListenable: store.client.password$,
+                      valueListenable: store.client.loading$,
                       builder: (context, value, child) {
                         return Container(
                           alignment: Alignment.centerRight,

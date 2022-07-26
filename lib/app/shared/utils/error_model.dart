@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 class ErrorModel {
   int? statusCode;
   String message;
@@ -5,21 +8,24 @@ class ErrorModel {
 
   ErrorModel({this.statusCode, this.message = '', this.error = ''});
 
-  factory ErrorModel.fromDocument(doc) {
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'statusCode': statusCode,
+      'message': message,
+      'error': error,
+    };
+  }
+
+  factory ErrorModel.fromMap(Map<String, dynamic> map) {
     return ErrorModel(
-      statusCode: doc['statusCode'],
-      message: doc['message'],
-      error: doc['error'],
+      statusCode: map['statusCode'] != null ? map['statusCode'] as int : null,
+      message: map['message'] as String,
+      error: map['error'] as String,
     );
   }
 
-  factory ErrorModel.fromJson(json) {
-    return ErrorModel(
-      statusCode: json['statusCode'],
-      message: json['message'],
-      error: json['error'],
-    );
-  }
+  String toJson() => json.encode(toMap());
 
-  Map<String, dynamic> toJson() => {};
+  factory ErrorModel.fromJson(String source) =>
+      ErrorModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

@@ -35,7 +35,7 @@ class AuthRepository implements IAuthRepository {
     Response response;
     var dio = Dio(
       BaseOptions(
-        baseUrl: DioStruture().baseUrlMunatasks,
+        baseUrl: DioStruture().baseUrl,
       ),
     );
 
@@ -70,7 +70,7 @@ class AuthRepository implements IAuthRepository {
     Response response;
     var dio = Dio(
       BaseOptions(
-        baseUrl: DioStruture().baseUrlMunatasks,
+        baseUrl: DioStruture().baseUrl,
       ),
     );
 
@@ -87,7 +87,7 @@ class AuthRepository implements IAuthRepository {
     Response response;
     var dio = Dio(
       BaseOptions(
-        baseUrl: DioStruture().baseUrlMunatasks,
+        baseUrl: DioStruture().baseUrl,
       ),
     );
 
@@ -113,7 +113,7 @@ class AuthRepository implements IAuthRepository {
     Response response;
     var dio = Dio(
       BaseOptions(
-        baseUrl: DioStruture().baseUrlMunatasks,
+        baseUrl: DioStruture().baseUrl,
       ),
     );
 
@@ -127,7 +127,7 @@ class AuthRepository implements IAuthRepository {
     Response response;
     var dio = Dio(
       BaseOptions(
-        baseUrl: DioStruture().baseUrlMunatasks,
+        baseUrl: DioStruture().baseUrl,
       ),
     );
 

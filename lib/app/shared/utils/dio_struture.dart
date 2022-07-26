@@ -5,7 +5,7 @@ import 'package:veacos/app/shared/repositories/localstorage/local_storage_share.
 
 class DioStruture {
   final ILocalStorage storage = LocalStorageShare();
-  final baseUrlMunatasks =
+  final baseUrl =
       'http://10.0.2.2:3333/'; //web desktop local 'http://localhost:3333/ app 'http://10.0.2.2:3333/' prod 'http://api.munatask.com/''
   List<String> localStorage = [];
   String token = '';
@@ -14,8 +14,7 @@ class DioStruture {
     token = localStorage.isNotEmpty ? localStorage[0] : '';
 
     return Dio(BaseOptions(
-        baseUrl: baseUrlMunatasks,
-        headers: {"Authorization": 'Bearer $token'}));
+        baseUrl: baseUrl, headers: {"Authorization": 'Bearer $token'}));
   }
 
   statusRequest(response) {

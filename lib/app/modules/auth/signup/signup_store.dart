@@ -26,16 +26,14 @@ class SignupStore {
   var loading$ = ValueNotifier(false);
   setLoading(value) => loading$.value = value;
 
-  submit() {
+  submit() async {
     UserClientModel model = UserClientModel(
         email: client.email$.value,
         name: client.name$.value,
         password: client.password$.value);
     setLoading(true);
-    auth.saveUser(model).then((r) {
-      setMsgErrOrGoal(true);
-      setMsg('Usuário criado com sucesso');
-      auth
+    await auth.saveUser(model).then((r) async {
+      await auth
           .getLoginDio(client.email$.value, client.password$.value)
           .then((value) async {
         UserModel user = UserModel.fromMap(value.data);

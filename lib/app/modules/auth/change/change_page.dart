@@ -56,12 +56,13 @@ class ChangePageState extends State<ChangePage> {
 
     return Scaffold(
       key: _scaffoldKey,
-      body: SingleChildScrollView(
-          child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+        child: SingleChildScrollView(
+            child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SizedBox(height: MediaQuery.of(context).padding.top),
             Container(
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -123,8 +124,8 @@ class ChangePageState extends State<ChangePage> {
               child: const LinkRoteWidget(labelBold: 'Login', rota: '/auth/'),
             ),
           ],
-        ),
-      )),
+        )),
+      ),
     );
   }
 }

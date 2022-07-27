@@ -25,10 +25,10 @@ class ChangeStore {
   var code$ = ValueNotifier('');
   setCode(value) => code$.value = value;
 
-  submit() {
+  submit() async {
     if (code$.value != '') {
       setLoading(true);
-      auth
+      await auth
           .changeUserPassword(code$.value, client.confirmPassword$.value)
           .then((value) {
         setMsgErrOrGoal(true);

@@ -48,90 +48,88 @@ class SignupPageState extends State<SignupPage> {
       child: Scaffold(
         key: _scaffoldKey,
         body: SingleChildScrollView(
-            child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Text(
-                  "CADASTRO",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 36,
-                      color: Theme.of(context).primaryColor),
-                  textAlign: TextAlign.left,
-                ),
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: MediaQuery.of(context).padding.top),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Text(
+                "CADASTRO",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 36,
+                    color: Theme.of(context).primaryColor),
+                textAlign: TextAlign.left,
               ),
-              SizedBox(height: size.height * 0.03),
-              ValueListenableBuilder(
-                  valueListenable: store.client.name$,
-                  builder: (context, value, child) {
-                    return SizedBox(
-                        child: TextFieldWidget(
-                            labelText: 'Nome',
-                            onChanged: store.client.setName,
-                            errorText: store.client.validateName));
-                  }),
-              ValueListenableBuilder(
-                  valueListenable: store.client.email$,
-                  builder: (context, value, child) {
-                    return SizedBox(
-                        child: TextFieldWidget(
-                            labelText: 'E-mail',
-                            onChanged: store.client.setEmail,
-                            errorText: store.client.validateEmail));
-                  }),
-              ValueListenableBuilder(
-                  valueListenable: store.client.password$,
-                  builder: (context, value, child) {
-                    return SizedBox(
+            ),
+            SizedBox(height: size.height * 0.03),
+            ValueListenableBuilder(
+                valueListenable: store.client.name$,
+                builder: (context, value, child) {
+                  return SizedBox(
                       child: TextFieldWidget(
-                          labelText: 'Senha',
-                          obscure: true,
-                          onChanged: store.client.setPassword,
-                          errorText: store.client.validatePassword),
-                    );
-                  }),
-              ValueListenableBuilder(
-                  valueListenable: store.client.confirmPassword$,
-                  builder: (context, value, child) {
-                    return SizedBox(
+                          labelText: 'Nome',
+                          onChanged: store.client.setName,
+                          errorText: store.client.validateName));
+                }),
+            ValueListenableBuilder(
+                valueListenable: store.client.email$,
+                builder: (context, value, child) {
+                  return SizedBox(
                       child: TextFieldWidget(
-                          labelText: 'Confirmação de senha',
-                          obscure: true,
-                          onChanged: store.client.setConfirmPassword,
-                          functionBool: store.client.isValidSignup,
-                          function: submit,
-                          errorText: store.client.validateConfirmPassword),
-                    );
-                  }),
-              SizedBox(height: size.height * 0.05),
-              ValueListenableBuilder(
-                  valueListenable: store.client.confirmPassword$,
-                  builder: (context, value, child) {
-                    return Container(
-                      alignment: Alignment.centerRight,
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 10),
-                      child: ButtonWidget(
-                          label: 'CADASTRAR',
-                          theme: store.client.theme$.value,
-                          width: size.width * 0.5,
-                          loading: store.loading$.value,
-                          function: store.client.isValidSignup ? submit : null),
-                    );
-                  }),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 58),
-                child: const LinkRoteWidget(
-                    labelBold: 'Já possui cadastro? Login', rota: '/auth/'),
-              ),
-            ],
-          ),
+                          labelText: 'E-mail',
+                          onChanged: store.client.setEmail,
+                          errorText: store.client.validateEmail));
+                }),
+            ValueListenableBuilder(
+                valueListenable: store.client.password$,
+                builder: (context, value, child) {
+                  return SizedBox(
+                    child: TextFieldWidget(
+                        labelText: 'Senha',
+                        obscure: true,
+                        onChanged: store.client.setPassword,
+                        errorText: store.client.validatePassword),
+                  );
+                }),
+            ValueListenableBuilder(
+                valueListenable: store.client.confirmPassword$,
+                builder: (context, value, child) {
+                  return SizedBox(
+                    child: TextFieldWidget(
+                        labelText: 'Confirmação de senha',
+                        obscure: true,
+                        onChanged: store.client.setConfirmPassword,
+                        functionBool: store.client.isValidSignup,
+                        function: submit,
+                        errorText: store.client.validateConfirmPassword),
+                  );
+                }),
+            SizedBox(height: size.height * 0.05),
+            ValueListenableBuilder(
+                valueListenable: store.client.confirmPassword$,
+                builder: (context, value, child) {
+                  return Container(
+                    alignment: Alignment.centerRight,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 10),
+                    child: ButtonWidget(
+                        label: 'CADASTRAR',
+                        theme: store.client.theme$.value,
+                        width: size.width * 0.5,
+                        loading: store.loading$.value,
+                        function: store.client.isValidSignup ? submit : null),
+                  );
+                }),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 58),
+              child: const LinkRoteWidget(
+                  labelBold: 'Já possui cadastro? Login', rota: '/auth/'),
+            ),
+          ],
         )),
       ),
     );

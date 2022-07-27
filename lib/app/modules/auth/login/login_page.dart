@@ -22,12 +22,6 @@ class LoginPageState extends State<LoginPage> {
     if (store.msg$.value != '') {
       SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
           message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
-      if (store.msgErrOrGoal$.value) {
-        Future.delayed(
-          const Duration(seconds: 2),
-          () => store.client.cleanVariables(),
-        );
-      }
     }
     store.setMsg('');
   }
@@ -52,6 +46,14 @@ class LoginPageState extends State<LoginPage> {
     super.dispose();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => store.client.cleanVariables());
+  }
+
+  @override
+  void initState() {
+    store.loading$.addListener(() {
+      setState(() {});
+    });
+    super.initState();
   }
 
   @override
@@ -123,7 +125,7 @@ class LoginPageState extends State<LoginPage> {
                             label: 'LOGIN',
                             theme: store.client.theme$.value,
                             width: size.width * 0.5,
-                            loading: store.client.loading$.value,
+                            loading: store.loading$.value,
                             function:
                                 store.client.isValidLogin ? submit : null),
                       );
@@ -135,7 +137,7 @@ class LoginPageState extends State<LoginPage> {
                       rota: '/auth/signup/'),
                 ),
                 ValueListenableBuilder(
-                    valueListenable: store.client.supportState$,
+                    valueListenable: store.supportState$,
                     builder: (context, value, child) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 32, right: 32),
@@ -155,8 +157,7 @@ class LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                             ),
-                            store.client.supportState$.value ==
-                                    SupportState.supported
+                            store.supportState$.value == SupportState.supported
                                 ? GestureDetector(
                                     onTap: submitBiometric,
                                     child: Container(
@@ -164,11 +165,9 @@ class LoginPageState extends State<LoginPage> {
                                           horizontal: 20),
                                       width: 64,
                                       child: ValueListenableBuilder(
-                                          valueListenable:
-                                              store.client.faceOrFinger$,
+                                          valueListenable: store.faceOrFinger$,
                                           builder: (context, value, child) {
-                                            return store
-                                                    .client.faceOrFinger$.value
+                                            return store.faceOrFinger$.value
                                                 ? const Image(
                                                     image: AssetImage(
                                                         'assets/img/face.png'))

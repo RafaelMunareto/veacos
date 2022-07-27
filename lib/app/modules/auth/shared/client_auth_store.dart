@@ -1,14 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:veacos/app/modules/auth/login/login_store.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/utils/error_model.dart';
 
 class ClientAuthStore {
   ILocalStorage storage = Modular.get();
-
-  var loading$ = ValueNotifier(false);
-  setLoading(value) => loading$.value = value;
 
   var theme$ = ValueNotifier(false);
   setTheme(value) => theme$.value = value;
@@ -22,9 +18,6 @@ class ClientAuthStore {
       }
     });
   }
-
-  var code$ = ValueNotifier('');
-  setCode(value) => code$.value = value;
 
   var name$ = ValueNotifier('');
   setName(value) => name$.value = value;
@@ -42,29 +35,11 @@ class ClientAuthStore {
     setName('');
     setEmail('');
     setPassword('');
-    setCode('');
   }
-
-  var checkError$ = ValueNotifier(false);
 
   bool get isValidLogin {
     return validateEmail() == null && validatePassword() == null;
   }
-
-  var supportState$ = ValueNotifier(SupportState.unknown);
-
-  var faceOrFinger$ = ValueNotifier(true);
-
-  var loginStorage$ = ValueNotifier([]);
-
-  //biometric
-  var canCheckBiometrics$ = ValueNotifier(false);
-
-  var availableBiometrics$ = ValueNotifier([]);
-
-  var authorized$ = ValueNotifier('Não autorizado!');
-
-  var isAuthenticating$ = ValueNotifier(false);
 
   bool get isValidSignup {
     return validateEmail() == null &&

@@ -26,8 +26,26 @@ class LoginStore {
   var msgErrOrGoal$ = ValueNotifier(false);
   setMsgErrOrGoal(value) => msgErrOrGoal$.value = value;
 
+  var supportState$ = ValueNotifier(SupportState.unknown);
+
+  var faceOrFinger$ = ValueNotifier(true);
+
+  var loginStorage$ = ValueNotifier([]);
+
+  var loading$ = ValueNotifier(false);
+  setLoading(value) => loading$.value = value;
+
+  //biometric
+  var canCheckBiometrics$ = ValueNotifier(false);
+
+  var availableBiometrics$ = ValueNotifier([]);
+
+  var authorized$ = ValueNotifier('Não autorizado!');
+
+  var isAuthenticating$ = ValueNotifier(false);
+
   submit() async {
-    await client.setLoading(true);
+    await setLoading(true);
     await auth
         .getLoginDio(client.email$.value, client.password$.value)
         .then((value) async {
@@ -42,14 +60,14 @@ class LoginStore {
           .put('login-normal', [client.email$.value, client.password$.value]);
       Modular.to.navigate('/home/');
     }).catchError((error) {
-      client.setLoading(false);
+      setLoading(false);
       setMsgErrOrGoal(false);
       setMsg(client.setMessageError(error));
-    }).whenComplete(() => client.setLoading(false));
+    }).whenComplete(() => setLoading(false));
   }
 
   loginWithGoogle() async {
-    client.setLoading(true);
+    setLoading(true);
     try {
       await auth.loginWithGoogle().then((value) {
         auth
@@ -64,12 +82,12 @@ class LoginStore {
           Modular.to.navigate('/home/');
         });
       }).onError((error, stackTrace) {
-        client.setLoading(false);
+        setLoading(false);
         setMsgErrOrGoal(false);
         setMsg(client.setMessageError(error));
-      }).whenComplete(() => client.setLoading(false));
+      }).whenComplete(() => setLoading(false));
     } catch (erro) {
-      client.setLoading(false);
+      setLoading(false);
       setMsgErrOrGoal(false);
       setMsg(client.setMessageError(erro));
     }
@@ -78,31 +96,29 @@ class LoginStore {
   checkBiometrics() {
     auth.biometricRepository
         .checkBiometrics()
-        .then((value) => client.canCheckBiometrics$.value = value);
+        .then((value) => canCheckBiometrics$.value = value);
   }
 
   getAvailableBiometrics() async {
     await auth.biometricRepository
         .getAvailableBiometrics()
-        .then((value) => client.availableBiometrics$.value = value);
-    if (client.availableBiometrics$.value.contains(BiometricType.face)) {
-      client.faceOrFinger$.value = true;
-    } else if (client.availableBiometrics$.value
-        .contains(BiometricType.fingerprint)) {
-      client.faceOrFinger$.value = false;
+        .then((value) => availableBiometrics$.value = value);
+    if (availableBiometrics$.value.contains(BiometricType.face)) {
+      faceOrFinger$.value = true;
+    } else if (availableBiometrics$.value.contains(BiometricType.fingerprint)) {
+      faceOrFinger$.value = false;
     }
   }
 
   authenticateBiometric() async {
     await auth
-        .authenticateWithBiometrics(client.faceOrFinger$.value)
+        .authenticateWithBiometrics(faceOrFinger$.value)
         .then((value) async {
       if (value == 'Authorized') {
-        if (client.loginStorage$.value[0] != '') {
-          client.setLoading(true);
+        if (loginStorage$.value[0] != '') {
+          setLoading(true);
           await auth
-              .getLoginDio(
-                  client.loginStorage$.value[0], client.loginStorage$.value[1])
+              .getLoginDio(loginStorage$.value[0], loginStorage$.value[1])
               .then((value) async {
             UserModel user = UserModel.fromMap(value.data);
             await SessionManager().set("token", user.jwtToken);
@@ -112,7 +128,7 @@ class LoginStore {
           }).catchError((error) {
             setMsgErrOrGoal(false);
             setMsg(client.setMessageError(error));
-          }).whenComplete(() => client.setLoading(false));
+          }).whenComplete(() => setLoading(false));
         }
       }
     });
@@ -121,18 +137,17 @@ class LoginStore {
   getStorageLogin() async {
     await storage.get('biometric').then((value) {
       if (value != null) {
-        client.loginStorage$.value = value;
+        loginStorage$.value = value;
       }
     });
   }
 
   checkSupportDevice() async {
     await getStorageLogin();
-    await bio.isDeviceSupported().then((isSupported) =>
-        client.supportState$.value =
-            isSupported && client.loginStorage$.value.isNotEmpty
-                ? SupportState.supported
-                : SupportState.unsupported);
+    await bio.isDeviceSupported().then((isSupported) => supportState$.value =
+        isSupported && loginStorage$.value.isNotEmpty
+            ? SupportState.supported
+            : SupportState.unsupported);
     await checkBiometrics();
     await getAvailableBiometrics();
   }
@@ -144,12 +159,12 @@ class LoginStore {
           auth
               .getLoginDio(value[0], value[1])
               .then((value) {
-                client.setLoading(false);
+                setLoading(false);
                 setMsgErrOrGoal(false);
               })
               .then((value) => Modular.to.navigate('/home/'))
               .catchError((error) {
-                client.setLoading(false);
+                setLoading(false);
                 setMsgErrOrGoal(false);
                 setMsg(client.setMessageError(error));
               });

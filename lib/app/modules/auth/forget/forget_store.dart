@@ -17,14 +17,17 @@ class ForgetStore {
   var msgErrOrGoal$ = ValueNotifier(false);
   setMsgErrOrGoal(value) => msgErrOrGoal$.value = value;
 
+  var loading$ = ValueNotifier(false);
+  setLoading(value) => loading$.value = value;
+
   submit() async {
-    client.setLoading(true);
-    await auth.sendEmailChangePassword(client.email$.value).then((value) async {
+    setLoading(true);
+    await auth.sendEmailChangePassword(client.email$.value).then((value) {
       setMsgErrOrGoal(true);
       setMsg(value?.data);
     }).catchError((error) {
       setMsgErrOrGoal(false);
       setMsg(client.setMessageError(error));
-    }).whenComplete(() => client.setLoading(false));
+    }).whenComplete(() => setLoading(false));
   }
 }

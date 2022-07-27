@@ -23,22 +23,19 @@ class ForgetPageState extends State<ForgetPage> {
     await store.submit();
     if (store.msg$.value != '') {
       SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
-          message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
-      if (store.msgErrOrGoal$.value) {
-        Future.delayed(
-          const Duration(seconds: 2),
-          () => store.client.cleanVariables(),
-        );
-      }
+          message: store.msg$.value,
+          errOrGoal: store.msgErrOrGoal$.value,
+          rota: '/auth/');
     }
     store.setMsg('');
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => store.client.cleanVariables());
+  void initState() {
+    store.loading$.addListener(() {
+      setState(() {});
+    });
+    super.initState();
   }
 
   @override
@@ -91,7 +88,7 @@ class ForgetPageState extends State<ForgetPage> {
                             label: 'ENVIAR SENHA',
                             theme: store.client.theme$.value,
                             width: size.width * 0.5,
-                            loading: store.client.loading$.value,
+                            loading: store.loading$.value,
                             function:
                                 store.client.isValidEmail ? submit : null),
                       );

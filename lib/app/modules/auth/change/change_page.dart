@@ -25,7 +25,10 @@ class ChangePageState extends State<ChangePage> {
 
   @override
   void initState() {
-    store.client.setCode(widget.code);
+    store.setCode(widget.code);
+    store.loading$.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -33,14 +36,11 @@ class ChangePageState extends State<ChangePage> {
     await store.submit();
     if (store.msg$.value != '') {
       SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
-          message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
-      if (store.msgErrOrGoal$.value) {
-        Future.delayed(
-          const Duration(seconds: 2),
-          () => store.client.cleanVariables(),
-        );
-      }
+          message: store.msg$.value,
+          errOrGoal: store.msgErrOrGoal$.value,
+          rota: '/auth/');
     }
+    store.setMsg('');
   }
 
   @override
@@ -76,7 +76,7 @@ class ChangePageState extends State<ChangePage> {
             ),
             SizedBox(height: size.height * 0.03),
             ValueListenableBuilder(
-                valueListenable: store.client.confirmPassword$,
+                valueListenable: store.client.password$,
                 builder: (context, value, child) {
                   return SizedBox(
                     child: TextFieldWidget(
@@ -96,7 +96,7 @@ class ChangePageState extends State<ChangePage> {
                         obscure: true,
                         onChanged: store.client.setConfirmPassword,
                         functionBool: store.client.isValidChangePassword,
-                        function: store.submit,
+                        function: submit,
                         errorText: store.client.validateConfirmPassword),
                   );
                 }),
@@ -112,7 +112,7 @@ class ChangePageState extends State<ChangePage> {
                       label: 'ALTERAR',
                       theme: store.client.theme$.value,
                       width: size.width * 0.5,
-                      loading: store.client.loading$.value,
+                      loading: store.loading$.value,
                       function:
                           store.client.isValidChangePassword ? submit : null,
                     ),

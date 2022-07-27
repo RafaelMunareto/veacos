@@ -19,19 +19,25 @@ class ChangeStore {
   var msgErrOrGoal$ = ValueNotifier(false);
   setMsgErrOrGoal(value) => msgErrOrGoal$.value = value;
 
+  var loading$ = ValueNotifier(false);
+  setLoading(value) => loading$.value = value;
+
+  var code$ = ValueNotifier('');
+  setCode(value) => code$.value = value;
+
   submit() {
-    if (client.code$.value != '') {
-      client.setLoading(true);
+    if (code$.value != '') {
+      setLoading(true);
       auth
-          .changeUserPassword(client.code$.value, client.confirmPassword$.value)
+          .changeUserPassword(code$.value, client.confirmPassword$.value)
           .then((value) {
         setMsgErrOrGoal(true);
         setMsg('Senha alterada com sucesso!');
       }).catchError((error) {
-        client.setLoading(false);
+        setLoading(false);
         setMsgErrOrGoal(false);
         setMsg(client.setMessageError(error));
-      }).whenComplete(() => client.setLoading(false));
+      }).whenComplete(() => setLoading(false));
     } else {
       setMsgErrOrGoal(false);
       setMsg('Usuário não encontrado na base');

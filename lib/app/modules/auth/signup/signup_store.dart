@@ -23,12 +23,15 @@ class SignupStore {
   var msgErrOrGoal$ = ValueNotifier(false);
   setMsgErrOrGoal(value) => msgErrOrGoal$.value = value;
 
+  var loading$ = ValueNotifier(false);
+  setLoading(value) => loading$.value = value;
+
   submit() {
     UserClientModel model = UserClientModel(
         email: client.email$.value,
         name: client.name$.value,
         password: client.password$.value);
-    client.setLoading(true);
+    setLoading(true);
     auth.saveUser(model).then((r) {
       setMsgErrOrGoal(true);
       setMsg('Usuário criado com sucesso');
@@ -46,6 +49,6 @@ class SignupStore {
     }).catchError((error) {
       setMsgErrOrGoal(false);
       setMsg(client.setMessageError(error));
-    }).whenComplete(() => client.setLoading(false));
+    }).whenComplete(() => setLoading(false));
   }
 }

@@ -21,12 +21,6 @@ class SignupPageState extends State<SignupPage> {
     if (store.msg$.value != '') {
       SnackbarCustom().createSnackBareErrOrGoal(_scaffoldKey,
           message: store.msg$.value, errOrGoal: store.msgErrOrGoal$.value);
-      if (store.msgErrOrGoal$.value) {
-        Future.delayed(
-          const Duration(seconds: 2),
-          () => store.client.cleanVariables(),
-        );
-      }
     }
     store.setMsg('');
   }
@@ -36,6 +30,14 @@ class SignupPageState extends State<SignupPage> {
     super.dispose();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => store.client.cleanVariables());
+  }
+
+  @override
+  void initState() {
+    store.loading$.addListener(() {
+      setState(() {});
+    });
+    super.initState();
   }
 
   @override
@@ -119,7 +121,7 @@ class SignupPageState extends State<SignupPage> {
                           label: 'CADASTRAR',
                           theme: store.client.theme$.value,
                           width: size.width * 0.5,
-                          loading: store.client.loading$.value,
+                          loading: store.loading$.value,
                           function: store.client.isValidSignup ? submit : null),
                     );
                   }),

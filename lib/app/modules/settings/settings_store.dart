@@ -5,44 +5,39 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/settings/shared/controller/client_settings_store.dart';
 import 'package:veacos/app/modules/settings/shared/services/interfaces/settings_service_interfaces.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 import 'package:veacos/app/shared/utils/dio_struture.dart';
+import 'package:veacos/app/shared/utils/error_model.dart';
 
-part 'settings_store.g.dart';
-
-class SettingsStore = _SettingsStoreBase with _$SettingsStore;
-
-abstract class _SettingsStoreBase with Store {
+class SettingsStore {
   final ISettingsService settingsService;
   final ClientSettingsStore client = Modular.get();
   final ILocalStorage storage = Modular.get();
   final ImagePicker picker = ImagePicker();
 
-  _SettingsStoreBase({required this.settingsService}) {
+  SettingsStore({required this.settingsService}) {
     getList();
   }
 
   getList() async {
     await client.getUid();
     await client.buscaTheme();
-    await getSettings();
+    await getSetting();
   }
 
-  getSettings() {
-    settingsService.show(client.user.email).then((value) async {
-      await client.setSettings(value);
-    }).whenComplete(() {
-      client.setLoading(false);
-      client.setLoadingImagem(false);
-    });
+  getSetting() async {
+    await client.setLoadingImagem(true);
+    await settingsService.show(client.user$.value.id).then((value) {
+      client.setSetting(value);
+    }).catchError((erro) {
+      client.setError(ErrorModel.fromJson(erro));
+    }).whenComplete(() => client.setLoadingImagem(false));
   }
 
   store() async {
-    await settingsService.store(client.settings);
-    getSettings();
+    await settingsService.store(client.setting$.value);
   }
 
   Future atualizaImagem({CroppedFile? image, File? imageDesktop}) async {
@@ -51,17 +46,19 @@ abstract class _SettingsStoreBase with Store {
     FormData formData = FormData.fromMap(
       {
         "urlImage": MultipartFile.fromBytes(listData,
-            filename: client.settings.foto == DioStruture().baseUrl + 'files'
-                ? client.settings.id
-                : client.settings.foto),
+            filename:
+                client.setting$.value.foto == DioStruture().baseUrl + 'files'
+                    ? client.setting$.value.id
+                    : client.setting$.value.foto),
       },
     );
     try {
       Response response;
       var dio = await DioStruture().dioAction();
-      response = await dio.put('perfil/${client.settings.id}', data: formData);
+      response =
+          await dio.put('perfil/${client.setting$.value.id}', data: formData);
       DioStruture().statusRequest(response);
-      getSettings();
+      getSetting();
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());

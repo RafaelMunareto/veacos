@@ -4,17 +4,13 @@ import 'package:veacos/app/modules/settings/shared/repository/interfaces/setting
 import 'package:veacos/app/shared/utils/dio_struture.dart';
 
 class SettingsRepository implements ISettingsRepository {
-  SettingsRepository();
-
-  void dispose() {}
-
   @override
   Future<SettingsModel> show(String id) async {
     Response response;
     var dio = await DioStruture().dioAction();
-    response = await dio.get('perfil/user/$id');
+    response = await dio.get('settings/$id');
     DioStruture().statusRequest(response);
-    return SettingsModel.fromJson(response.data[0]);
+    return SettingsModel.fromMap(response.data);
   }
 
   @override
@@ -24,7 +20,7 @@ class SettingsRepository implements ISettingsRepository {
     response = await dio.get('settings');
     DioStruture().statusRequest(response);
     return (response.data as List).map((e) {
-      return SettingsModel.fromJson(e);
+      return SettingsModel.fromMap(e);
     }).toList();
   }
 

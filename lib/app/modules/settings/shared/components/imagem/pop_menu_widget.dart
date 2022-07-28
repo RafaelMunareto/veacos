@@ -17,6 +17,7 @@ class PopMenuWidget extends StatefulWidget {
 
 class _PopMenuWidgetState extends State<PopMenuWidget> {
   SettingsStore store = Modular.get();
+
   CroppedFile? imageFile;
   final ImagePicker picker = Modular.get();
   List<PlatformUiSettings>? buildUiSettings(BuildContext context) {
@@ -74,7 +75,7 @@ class _PopMenuWidgetState extends State<PopMenuWidget> {
     return PopupMenuButton(
       icon: IconImagemWidget(
         icon: Icons.photo_camera,
-        color: store.client.theme
+        color: store.client.theme$.value
             ? darkThemeData(context).primaryColor
             : lightThemeData(context).primaryColor,
       ),
@@ -87,7 +88,7 @@ class _PopMenuWidgetState extends State<PopMenuWidget> {
             child: ListTile(
               leading: Icon(
                 Icons.camera_alt,
-                color: store.client.theme
+                color: store.client.theme$.value
                     ? darkThemeData(context).primaryColor
                     : lightThemeData(context).primaryColor,
               ),
@@ -107,7 +108,7 @@ class _PopMenuWidgetState extends State<PopMenuWidget> {
             child: ListTile(
               leading: Icon(
                 Icons.image,
-                color: store.client.theme
+                color: store.client.theme$.value
                     ? darkThemeData(context).primaryColor
                     : lightThemeData(context).primaryColor,
               ),

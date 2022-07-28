@@ -1,33 +1,36 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, unnecessary_null_in_if_null_operators
 import 'dart:convert';
 
 class ErrorModel {
   int? statusCode;
   dynamic message;
-  String error;
+  dynamic error;
 
-  ErrorModel({this.statusCode, this.message, this.error = ''});
+  ErrorModel({this.statusCode, this.message, this.error});
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'statusCode': statusCode,
-      'message': message,
-      'error': error,
-    };
+    final result = <String, dynamic>{};
+
+    if (statusCode != null) {
+      result.addAll({'statusCode': statusCode});
+    }
+    result.addAll({'message': message});
+    result.addAll({'error': error});
+
+    return result;
   }
 
   factory ErrorModel.fromMap(Map<String, dynamic> map) {
     return ErrorModel(
-      statusCode: map['statusCode'] != null ? map['statusCode'] as int : null,
-      message: map['message'] is List
-          ? map['message'][0] as String
-          : map['message'] as String,
-      error: map['error'] as String,
+      statusCode: map['statusCode']?.toInt(),
+      message:
+          map['message'] is List ? map['message'][0] : map['message'] ?? null,
+      error: map['error'] ?? null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory ErrorModel.fromJson(String source) =>
-      ErrorModel.fromMap(json.decode(source) as Map<String, dynamic>);
+      ErrorModel.fromMap(json.decode(source));
 }

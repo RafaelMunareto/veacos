@@ -24,7 +24,12 @@ class _ImagemSettingsWidgetState extends State<ImagemSettingsWidget>
   @override
   void initState() {
     super.initState();
-
+    store.client.setting$.addListener(() {
+      setState(() {});
+    });
+    store.client.loadingImagem$.addListener(() {
+      setState(() {});
+    });
     _controller = AnimationController(
         duration: const Duration(milliseconds: 700), vsync: this);
     _controller.forward();
@@ -44,56 +49,37 @@ class _ImagemSettingsWidgetState extends State<ImagemSettingsWidget>
   }
 
   Widget _buildAnimation(BuildContext context, Widget? child) {
-    return Observer(builder: (_) {
-      return Stack(
-        children: [
-          if (client.settings.id != '')
-            Positioned(
-              top: 0,
-              left: 30,
-              child: Center(
-                child: Observer(builder: (_) {
-                  return store.client.loadingImagem
-                      ? const CircularProgressIndicatorWidget()
-                      : Container(
-                          width: 170.0,
-                          height: 170.0,
-                          decoration: store.client.settings.foto != ''
-                              ? BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: CachedNetworkImageProvider(
-                                      store.client.settings.foto,
-                                    ),
-                                  ),
-                                )
-                              : const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: AssetImage('assets/img/person.png'),
-                                  ),
+    return Stack(
+      children: [
+        Positioned(
+          top: 0,
+          left: 30,
+          child: Center(
+              child: store.client.loadingImagem$.value
+                  ? const CircularProgressIndicatorWidget()
+                  : Container(
+                      width: 170.0,
+                      height: 170.0,
+                      decoration: store.client.setting$.value.foto != ''
+                          ? BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.fill,
+                                image: CachedNetworkImageProvider(
+                                  store.client.setting$.value.foto,
                                 ),
-                        );
-                }),
-              ),
-            )
-          else
-            const Positioned(
-              left: 90,
-              top: 50,
-              child: CircularProgressIndicatorWidget(),
-            ),
-          Positioned(
-            top: 10,
-            left: 165,
-            child: GestureDetector(
-              child: const PopMenuWidget(),
-            ),
-          ),
-        ],
-      );
-    });
+                              ),
+                            )
+                          : const BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.fill,
+                                image: AssetImage('assets/img/person.png'),
+                              ),
+                            ),
+                    )),
+        )
+      ],
+    );
   }
 }

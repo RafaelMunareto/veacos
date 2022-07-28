@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class GrupoModel {
   String id;
   String grupo;
@@ -7,18 +9,22 @@ class GrupoModel {
     this.grupo = '',
   });
 
-  factory GrupoModel.fromDocument(doc) {
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      '_id': id,
+      'grupo': grupo,
+    };
+  }
+
+  factory GrupoModel.fromMap(Map<String, dynamic> map) {
     return GrupoModel(
-      id: doc['id'],
-      grupo: doc['grupo'],
+      id: map['_id'] as String,
+      grupo: map['grupo'] as String,
     );
   }
 
-  factory GrupoModel.fromJson(json) {
-    return GrupoModel(
-      id: json['id'],
-      grupo: json['grupo'],
-    );
-  }
-  Map<String, dynamic> toJson() => {};
+  String toJson() => json.encode(toMap());
+
+  factory GrupoModel.fromJson(String source) =>
+      GrupoModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

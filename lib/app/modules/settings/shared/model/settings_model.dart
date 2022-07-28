@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:veacos/app/modules/settings/shared/model/grupo_model.dart';
 import 'package:veacos/app/shared/auth/model/user_client.model.dart';
+import 'package:veacos/app/shared/utils/dio_struture.dart';
 
 class SettingsModel {
   String id;
@@ -14,23 +17,32 @@ class SettingsModel {
     this.user,
   });
 
-  factory SettingsModel.fromDocument(doc) {
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'id': id});
+    result.addAll({'foto': foto});
+    if (grupo != null) {
+      result.addAll({'grupo': grupo!.toMap()});
+    }
+    if (user != null) {
+      result.addAll({'user': user!.toMap()});
+    }
+
+    return result;
+  }
+
+  factory SettingsModel.fromMap(Map<String, dynamic> map) {
     return SettingsModel(
-      id: doc['id'],
-      foto: doc['foto'],
-      grupo: doc['grupo'],
-      user: doc['user'],
+      id: map['id'] ?? '',
+      foto: DioStruture().baseUrl + map['foto'],
+      grupo: map['grupo'] != null ? GrupoModel.fromMap(map['grupo']) : null,
+      user: map['user'] != null ? UserClientModel.fromMap(map['user']) : null,
     );
   }
 
-  factory SettingsModel.fromJson(json) {
-    return SettingsModel(
-      id: json['id'],
-      foto: json['foto'],
-      grupo: json['grupo'],
-      user: json['user'],
-    );
-  }
+  String toJson() => json.encode(toMap());
 
-  Map<String, dynamic> toJson() => {};
+  factory SettingsModel.fromJson(String source) =>
+      SettingsModel.fromMap(json.decode(source));
 }

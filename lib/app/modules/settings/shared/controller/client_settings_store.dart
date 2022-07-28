@@ -1,37 +1,32 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mobx/mobx.dart';
 import 'package:veacos/app/modules/settings/shared/model/settings_model.dart';
 import 'package:veacos/app/shared/auth/model/user_model.dart';
 import 'package:veacos/app/shared/repositories/localstorage/local_storage_interface.dart';
 
-part 'client_settings_store.g.dart';
-
-class ClientSettingsStore = _ClientSettingsStoreBase with _$ClientSettingsStore;
-
-abstract class _ClientSettingsStoreBase with Store {
+class ClientSettingsStore {
   ILocalStorage storage = Modular.get();
 
-  @observable
-  bool loading = true;
+  var loadingImagem$ = ValueNotifier(false);
+  setLoadingImagem(value) => loadingImagem$.value = value;
 
-  @action
-  setLoading(value) => loading = value;
+  var theme$ = ValueNotifier(false);
+  setTheme(value) => theme$.value = value;
 
-  @observable
-  bool loadingImagem = false;
+  var loading$ = ValueNotifier(false);
+  setLoading(value) => loading$.value = value;
 
-  @action
-  setLoadingImagem(value) => loadingImagem = value;
+  var settings$ = ValueNotifier([]);
+  setSettings(value) => settings$.value = value;
 
-  @observable
-  bool theme = false;
+  var setting$ = ValueNotifier<SettingsModel>(SettingsModel());
+  setSetting(value) => setting$.value = value;
 
-  @action
-  setTheme(value) => theme = value;
+  var error$ = ValueNotifier('');
+  setError(value) => error$.value = value;
 
-  @action
   buscaTheme() {
     storage.get('theme').then((value) {
       if (value?[0] == 'dark') {
@@ -42,22 +37,12 @@ abstract class _ClientSettingsStoreBase with Store {
     });
   }
 
-  @action
   getUid() {
     storage.get('user').then((value) {
-      setUser(UserModel.fromJson(jsonDecode(value[0])));
+      setUser(UserModel.fromMap(jsonDecode(value[0])));
     });
   }
 
-  @observable
-  UserModel user = UserModel();
-
-  @action
-  setUser(value) => user = value;
-
-  @observable
-  SettingsModel settings = SettingsModel();
-
-  @action
-  setSettings(value) => user = value;
+  var user$ = ValueNotifier(UserModel());
+  setUser(value) => user$.value = value;
 }
